@@ -1,0 +1,1167 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#fff9ef" />
+    <link rel="icon" href="data:," />
+    <meta
+      name="description"
+      content="从一个小黄 IP，到一套可以被 Codex / Agent 重复调用的视觉生成系统。"
+    />
+    <title>我是怎么做出 cs-xiaohuang-skill 的</title>
+    <style>
+      :root {
+        --paper: #fff9ef;
+        --paper-deep: #fff2dc;
+        --ink: #151515;
+        --ink-soft: #5f5a51;
+        --line: #e9dfcc;
+        --yellow: #f6b72a;
+        --yellow-light: #ffd86a;
+        --orange: #f59a23;
+        --coral: #e25a42;
+        --blue: #5d9ed8;
+        --green: #5d7d6c;
+        --serif: Georgia, "Songti SC", "STSong", serif;
+        --sans: Inter, "PingFang SC", "Microsoft YaHei", "Noto Sans SC", system-ui, sans-serif;
+        --mono: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+        --max: 1240px;
+        --ease: cubic-bezier(0.22, 1, 0.36, 1);
+      }
+
+      * { box-sizing: border-box; }
+      html { scroll-behavior: smooth; }
+      body {
+        min-width: 320px;
+        margin: 0;
+        color: var(--ink);
+        background: var(--paper);
+        font-family: var(--sans);
+        -webkit-font-smoothing: antialiased;
+      }
+      button, a { font: inherit; }
+      button { color: inherit; }
+      a { color: inherit; }
+      ::selection { color: var(--ink); background: var(--yellow-light); }
+      .sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+      }
+
+      .site-header {
+        position: fixed;
+        inset: 0 0 auto;
+        z-index: 50;
+        height: 62px;
+        border-bottom: 1px solid transparent;
+        transition: background 280ms var(--ease), border-color 280ms var(--ease), backdrop-filter 280ms var(--ease);
+      }
+      .site-header.is-scrolled {
+        border-color: rgba(21, 21, 21, 0.1);
+        background: rgba(255, 249, 239, 0.88);
+        backdrop-filter: blur(18px);
+      }
+      .nav {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: min(var(--max), calc(100% - 48px));
+        height: 100%;
+        margin: 0 auto;
+      }
+      .brand {
+        display: inline-flex;
+        gap: 10px;
+        align-items: center;
+        font-family: var(--mono);
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        text-decoration: none;
+      }
+      .brand-mark {
+        position: relative;
+        width: 19px;
+        height: 19px;
+        background: var(--yellow);
+        border: 1.5px solid var(--ink);
+        border-radius: 46% 54% 47% 53% / 56% 43% 57% 44%;
+        transform: rotate(-10deg);
+      }
+      .brand-mark::after {
+        position: absolute;
+        top: -9px;
+        left: 9px;
+        width: 7px;
+        height: 7px;
+        border: 1.5px solid var(--orange);
+        border-radius: 50% 50% 50% 0;
+        content: "";
+        transform: rotate(-45deg);
+      }
+      .nav-links { display: flex; gap: 26px; align-items: center; }
+      .nav-links a {
+        color: var(--ink-soft);
+        font-size: 13px;
+        text-decoration: none;
+        transition: color 180ms ease;
+      }
+      .nav-links a:hover, .nav-links a:focus-visible { color: var(--ink); }
+      .nav-github {
+        display: inline-flex;
+        gap: 8px;
+        align-items: center;
+        padding: 8px 12px;
+        color: var(--paper) !important;
+        background: var(--ink);
+        border-radius: 6px;
+      }
+      .nav-github svg { width: 14px; height: 14px; }
+      .progress-track {
+        position: fixed;
+        top: 61px;
+        left: 0;
+        z-index: 51;
+        width: 100%;
+        height: 2px;
+        background: transparent;
+      }
+      .progress-track span { display: block; width: 0; height: 100%; background: var(--orange); }
+
+      main { overflow: hidden; }
+      .section {
+        position: relative;
+        width: min(var(--max), calc(100% - 48px));
+        margin: 0 auto;
+        padding: 138px 0;
+      }
+      .section::before {
+        position: absolute;
+        top: 0;
+        right: 0;
+        left: 0;
+        height: 1px;
+        background: var(--line);
+        content: "";
+      }
+      .section-kicker {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+        margin: 0 0 23px;
+        color: var(--ink-soft);
+        font-family: var(--mono);
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.07em;
+        text-transform: uppercase;
+      }
+      .section-kicker::before { width: 22px; height: 1px; background: var(--orange); content: ""; }
+      .section-title {
+        max-width: 850px;
+        margin: 0;
+        font-size: clamp(38px, 5.1vw, 76px);
+        font-weight: 800;
+        letter-spacing: -0.065em;
+        line-height: 1.07;
+      }
+      .section-intro {
+        max-width: 620px;
+        margin: 25px 0 0;
+        color: var(--ink-soft);
+        font-size: 18px;
+        line-height: 1.75;
+      }
+      .eyebrow-note {
+        margin: 0;
+        color: var(--ink-soft);
+        font-family: var(--mono);
+        font-size: 12px;
+        letter-spacing: 0.03em;
+      }
+      .warm { color: var(--orange); }
+      .blue { color: var(--blue); }
+      .ink { color: var(--ink); }
+      .reveal {
+        opacity: 0;
+        transform: translateY(20px);
+        transition: opacity 760ms var(--ease), transform 760ms var(--ease);
+      }
+      .reveal.is-visible { opacity: 1; transform: translateY(0); }
+
+      /* Hero */
+      .hero {
+        display: grid;
+        grid-template-columns: minmax(0, 1.08fr) minmax(360px, 0.92fr);
+        gap: 42px;
+        align-items: end;
+        min-height: min(860px, 100svh);
+        padding-top: 132px;
+        padding-bottom: 96px;
+      }
+      .hero::before { display: none; }
+      .hero-copy { align-self: center; padding-top: 44px; }
+      .repo-label {
+        display: inline-flex;
+        gap: 10px;
+        align-items: center;
+        padding: 8px 11px;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        color: var(--ink-soft);
+        font-family: var(--mono);
+        font-size: 12px;
+      }
+      .repo-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--yellow); }
+      .hero h1 {
+        max-width: 780px;
+        margin: 27px 0 22px;
+        font-size: clamp(54px, 7.7vw, 112px);
+        font-weight: 820;
+        letter-spacing: -0.085em;
+        line-height: 0.98;
+      }
+        .hero h1 em { color: var(--orange); font-family: var(--serif); font-weight: 400; letter-spacing: -0.08em; overflow-wrap: anywhere; }
+      .hero-lede {
+        max-width: 584px;
+        margin: 0;
+        color: var(--ink-soft);
+        font-size: 20px;
+        letter-spacing: -0.02em;
+        line-height: 1.65;
+      }
+      .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 34px; }
+      .button {
+        display: inline-flex;
+        gap: 10px;
+        align-items: center;
+        justify-content: center;
+        min-height: 47px;
+        padding: 0 18px;
+        border: 1px solid var(--ink);
+        border-radius: 7px;
+        font-size: 14px;
+        font-weight: 700;
+        text-decoration: none;
+        transition: transform 180ms var(--ease), background 180ms ease, color 180ms ease;
+      }
+      .button:hover, .button:focus-visible { transform: translateY(-2px); }
+      .button-primary { color: var(--paper); background: var(--ink); }
+      .button-primary:hover, .button-primary:focus-visible { background: #34312d; }
+      .button-secondary { background: transparent; }
+      .button-secondary:hover, .button-secondary:focus-visible { background: var(--paper-deep); }
+      .button svg { width: 15px; height: 15px; }
+
+      .hero-stage {
+        position: relative;
+        min-height: 570px;
+        border: 1px solid var(--line);
+        background-color: #fffbf5;
+        background-image: radial-gradient(circle at 1px 1px, #dfd5c4 1px, transparent 1.2px);
+        background-size: 18px 18px;
+        overflow: hidden;
+      }
+      .hero-stage::before,
+      .hero-stage::after { position: absolute; border: 1px solid rgba(21, 21, 21, 0.14); border-radius: 50%; content: ""; }
+      .hero-stage::before { top: 69px; right: 52px; width: 268px; height: 268px; }
+      .hero-stage::after { right: 133px; bottom: 41px; width: 156px; height: 156px; border-style: dashed; }
+      .sketch-label {
+        position: absolute;
+        z-index: 2;
+        padding: 7px 10px;
+        background: var(--paper);
+        border: 1px solid var(--ink);
+        box-shadow: 4px 4px 0 var(--yellow-light);
+        font-family: var(--mono);
+        font-size: 12px;
+        font-weight: 700;
+      }
+      .sketch-label.one { top: 74px; left: 36px; transform: rotate(-4deg); }
+      .sketch-label.two { right: 28px; bottom: 60px; transform: rotate(3deg); }
+      .hero-character {
+        position: absolute;
+        z-index: 3;
+        right: 35px;
+        bottom: -4px;
+        width: min(80%, 420px);
+        mix-blend-mode: multiply;
+        filter: saturate(1.03);
+        transform: rotate(1deg);
+      }
+      .experience-stack {
+        position: absolute;
+        bottom: 47px;
+        left: 35px;
+        z-index: 4;
+        width: 222px;
+      }
+      .experience-stack span {
+        display: block;
+        margin-top: -1px;
+        padding: 11px 13px;
+        background: var(--paper);
+        border: 1px solid var(--ink);
+        font-size: 13px;
+        font-weight: 700;
+      }
+      .experience-stack span:nth-child(1) { transform: rotate(-3deg); }
+      .experience-stack span:nth-child(2) { transform: rotate(1deg); }
+      .experience-stack span:nth-child(3) { transform: rotate(-1deg); }
+      .arrow-scribble {
+        position: absolute;
+        top: 53%;
+        left: 238px;
+        z-index: 4;
+        width: 110px;
+        height: 54px;
+        border-top: 2px solid var(--ink);
+        border-radius: 50%;
+        transform: rotate(-15deg);
+      }
+      .arrow-scribble::after {
+        position: absolute;
+        top: -7px;
+        right: -2px;
+        width: 15px;
+        height: 15px;
+        border-top: 2px solid var(--ink);
+        border-right: 2px solid var(--ink);
+        content: "";
+        transform: rotate(41deg);
+      }
+
+      /* Problem */
+      .problem-grid { display: grid; grid-template-columns: 1.08fr 0.92fr; gap: 76px; align-items: center; margin-top: 68px; }
+      .issue-list { border-top: 1px solid var(--ink); }
+      .issue {
+        display: grid;
+        grid-template-columns: 38px 1fr auto;
+        gap: 16px;
+        align-items: center;
+        padding: 20px 0;
+        border-bottom: 1px solid var(--line);
+        font-size: 17px;
+      }
+      .issue-index { color: var(--orange); font-family: var(--mono); font-size: 12px; font-weight: 700; }
+      .issue-mark { position: relative; width: 26px; height: 26px; }
+      .issue-mark::before, .issue-mark::after { position: absolute; top: 12px; left: 2px; width: 23px; height: 1.5px; background: var(--coral); content: ""; }
+      .issue-mark::before { transform: rotate(45deg); }
+      .issue-mark::after { transform: rotate(-45deg); }
+      .problem-quote {
+        padding: 52px 44px 46px;
+        background: var(--ink);
+        color: var(--paper);
+      }
+      .problem-quote .eyebrow-note { color: rgba(255, 249, 239, 0.56); }
+      .problem-quote p:not(.eyebrow-note) {
+        margin: 23px 0 0;
+        font-family: var(--serif);
+        font-size: clamp(35px, 4vw, 56px);
+        letter-spacing: -0.065em;
+        line-height: 1.09;
+      }
+      .problem-quote strong { color: var(--yellow); font-weight: 400; }
+
+      /* Compare */
+      .compare-heading { display: flex; justify-content: space-between; gap: 30px; align-items: end; }
+      .segmented { display: inline-flex; padding: 4px; border: 1px solid var(--line); border-radius: 8px; background: #fffdf8; }
+      .segmented button {
+        padding: 8px 11px;
+        border: 0;
+        border-radius: 5px;
+        background: transparent;
+        cursor: pointer;
+        font-family: var(--mono);
+        font-size: 12px;
+      }
+      .segmented button[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
+      .compare-stage { display: grid; grid-template-columns: 1fr 76px 1fr; gap: 0; align-items: stretch; margin-top: 58px; }
+      .compare-panel { min-height: 410px; padding: 40px; border: 1px solid var(--line); transition: opacity 250ms ease, transform 250ms var(--ease), border-color 250ms ease; }
+      .compare-panel h3 { margin: 0; font-size: 30px; letter-spacing: -0.055em; }
+      .compare-panel .panel-tag { margin: 11px 0 35px; color: var(--ink-soft); font-family: var(--mono); font-size: 12px; }
+      .prompt-panel { background: #fffdf8; }
+      .skill-panel { background: var(--paper-deep); border-color: #e7ce9d; }
+      .compare-list { display: grid; gap: 13px; padding: 0; margin: 0; list-style: none; }
+      .compare-list li { display: flex; gap: 12px; align-items: center; color: var(--ink-soft); font-size: 16px; }
+      .compare-list li::before { width: 7px; height: 7px; border-radius: 50%; background: var(--coral); content: ""; }
+      .skill-panel .compare-list li::before { border-radius: 0; background: var(--green); transform: rotate(45deg); }
+      .compare-arrow { position: relative; display: grid; place-items: center; }
+      .compare-arrow::before { width: 1px; height: 100%; background: var(--line); content: ""; }
+      .compare-arrow span {
+        position: absolute;
+        display: grid;
+        width: 42px;
+        height: 42px;
+        background: var(--yellow);
+        border: 1px solid var(--ink);
+        border-radius: 50%;
+        font-size: 25px;
+        place-items: center;
+      }
+      .compare-stage[data-mode="prompt"] .skill-panel { opacity: 0.42; transform: translateX(5px); }
+      .compare-stage[data-mode="skill"] .prompt-panel { opacity: 0.42; transform: translateX(-5px); }
+      .compare-takeaway { margin: 31px 0 0; font-family: var(--serif); font-size: clamp(28px, 3vw, 40px); letter-spacing: -0.055em; }
+      .compare-takeaway strong { color: var(--orange); font-weight: 400; }
+
+      /* Modes */
+      .mode-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; margin-top: 65px; background: var(--line); border: 1px solid var(--line); }
+      .mode {
+        min-height: 420px;
+        padding: 35px;
+        background: var(--paper);
+        transition: background 200ms ease;
+      }
+      .mode:hover { background: #fff4df; }
+      .mode-number { display: inline-grid; width: 34px; height: 34px; border: 1px solid var(--ink); border-radius: 50%; font-family: var(--mono); font-size: 12px; place-items: center; }
+      .mode h3 { margin: 80px 0 10px; font-size: 32px; letter-spacing: -0.06em; }
+      .mode > p { max-width: 260px; margin: 0; color: var(--ink-soft); font-size: 15px; line-height: 1.6; }
+      .mode-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 28px; }
+      .mode-tags span { padding: 7px 9px; border: 1px solid var(--line); border-radius: 999px; font-size: 12px; }
+      .mode-footer { display: flex; gap: 8px; align-items: center; margin-top: 36px; color: var(--orange); font-family: var(--mono); font-size: 12px; font-weight: 700; }
+      .mode-footer::before { width: 8px; height: 8px; background: var(--yellow); border-radius: 50%; content: ""; }
+      .example-gallery { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin: 28px 0 0; }
+      .example-gallery figure { margin: 0; }
+      .example-gallery img { display: block; width: 100%; aspect-ratio: 16 / 9; border: 1px solid var(--line); object-fit: cover; }
+      .example-gallery figcaption { margin-top: 9px; color: var(--ink-soft); font-family: var(--mono); font-size: 11px; }
+
+      /* Architecture */
+      .architecture { padding-bottom: 156px; }
+      .architecture-board {
+        position: relative;
+        min-height: 740px;
+        margin-top: 62px;
+        background-color: #fffbf5;
+        background-image: linear-gradient(rgba(21,21,21,.07) 1px, transparent 1px), linear-gradient(90deg, rgba(21,21,21,.07) 1px, transparent 1px);
+        background-size: 36px 36px;
+        border: 1px solid var(--line);
+        overflow: hidden;
+      }
+      .architecture-board::before {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 390px;
+        height: 390px;
+        border: 1px dashed rgba(21,21,21,.22);
+        border-radius: 50%;
+        content: "";
+        transform: translate(-50%, -50%);
+      }
+      .architecture-board::after {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 610px;
+        height: 1px;
+        background: rgba(21,21,21,.18);
+        content: "";
+        transform: translate(-50%, -50%);
+      }
+      .system-core {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        z-index: 4;
+        display: grid;
+        width: 218px;
+        height: 218px;
+        border: 2px solid var(--ink);
+        border-radius: 50%;
+        background: var(--yellow);
+        box-shadow: 13px 13px 0 var(--orange);
+        cursor: default;
+        place-items: center;
+        transform: translate(-50%, -50%) rotate(-4deg);
+      }
+      .system-core span { font-family: var(--mono); font-size: 22px; font-weight: 800; letter-spacing: -0.05em; }
+      .system-core small { display: block; margin-top: 5px; font-family: var(--sans); font-size: 12px; font-weight: 500; letter-spacing: 0; }
+      .arch-node {
+        position: absolute;
+        z-index: 5;
+        padding: 12px 14px;
+        border: 1px solid var(--ink);
+        border-radius: 6px;
+        background: var(--paper);
+        box-shadow: 4px 4px 0 var(--line);
+        cursor: pointer;
+        font-family: var(--mono);
+        font-size: 13px;
+        font-weight: 700;
+        transition: background 180ms ease, box-shadow 180ms ease, transform 180ms var(--ease);
+      }
+      .arch-node:hover, .arch-node:focus-visible, .arch-node.is-active { background: var(--yellow-light); box-shadow: 5px 5px 0 var(--orange); outline: none; transform: translate(-2px, -2px); }
+      .arch-node[data-node="assets"] { top: 108px; left: 10%; }
+      .arch-node[data-node="references"] { top: 92px; right: 10%; }
+      .arch-node[data-node="examples"] { bottom: 110px; left: 12%; }
+      .arch-node[data-node="tokens"] { right: 12%; bottom: 105px; }
+      .arch-node[data-node="image"] { top: 44%; left: 7%; }
+      .arch-node[data-node="quality"] { top: 44%; right: 7%; }
+      .arch-detail {
+        position: absolute;
+        right: 25px;
+        bottom: 23px;
+        z-index: 6;
+        width: min(360px, calc(100% - 50px));
+        padding: 17px 18px;
+        background: var(--ink);
+        color: var(--paper);
+      }
+      .arch-detail strong { display: block; margin-bottom: 6px; color: var(--yellow); font-family: var(--mono); font-size: 12px; }
+      .arch-detail p { margin: 0; font-size: 13px; line-height: 1.65; }
+      .flow-strip { display: grid; grid-template-columns: repeat(8, minmax(0, 1fr)); gap: 0; margin: 28px auto 0; overflow: hidden; border: 1px solid var(--ink); background: var(--ink); }
+      .flow-strip span { position: relative; padding: 15px 11px; color: var(--ink); background: var(--paper); font-family: var(--mono); font-size: 11px; text-align: center; }
+      .flow-strip span:not(:last-child)::after { position: absolute; top: 50%; right: -5px; z-index: 3; width: 10px; height: 10px; border-top: 1px solid var(--ink); border-right: 1px solid var(--ink); background: var(--paper); content: ""; transform: translateY(-50%) rotate(45deg); }
+
+      /* Router and files */
+      .router-grid { display: grid; grid-template-columns: 0.88fr 1.12fr; gap: 74px; align-items: start; margin-top: 62px; }
+      .router-card { padding: 35px; border: 1px solid var(--ink); background: var(--ink); color: var(--paper); }
+      .router-card .file-icon { display: block; width: 32px; height: 39px; border: 1px solid var(--yellow); border-radius: 3px; }
+      .router-card h3 { margin: 62px 0 14px; color: var(--yellow); font-family: var(--mono); font-size: 25px; letter-spacing: -0.06em; }
+      .router-card p { max-width: 350px; margin: 0; color: rgba(255,249,239,.7); line-height: 1.65; }
+      .router-rule { display: flex; gap: 10px; align-items: center; margin-top: 31px; color: var(--paper); font-family: var(--serif); font-size: 24px; letter-spacing: -0.045em; }
+      .router-rule::before { width: 8px; height: 8px; border-radius: 50%; background: var(--orange); content: ""; }
+      .file-tree { border-top: 1px solid var(--ink); }
+      .tree-row {
+        display: grid;
+        grid-template-columns: 26px minmax(142px, .65fr) 1.35fr;
+        gap: 12px;
+        align-items: center;
+        width: 100%;
+        padding: 13px 0;
+        border: 0;
+        border-bottom: 1px solid var(--line);
+        background: transparent;
+        cursor: pointer;
+        text-align: left;
+      }
+      .tree-row:hover .tree-name, .tree-row:focus-visible .tree-name { color: var(--orange); }
+      .tree-row:focus-visible { outline: 2px solid var(--orange); outline-offset: -2px; }
+      .tree-row .branch { color: var(--orange); font-family: var(--mono); font-size: 15px; }
+      .tree-name { font-family: var(--mono); font-size: 13px; font-weight: 700; transition: color 180ms ease; }
+      .tree-purpose { color: var(--ink-soft); font-size: 13px; line-height: 1.45; }
+      .tree-status { margin-top: 18px; padding: 14px 15px; border-left: 2px solid var(--orange); background: #fff4df; color: var(--ink-soft); font-size: 14px; line-height: 1.6; }
+      .tree-status strong { color: var(--ink); }
+
+      /* Character DNA */
+      .dna-grid { display: grid; grid-template-columns: 1.04fr .96fr; gap: 78px; align-items: center; margin-top: 64px; }
+      .character-board { position: relative; min-height: 580px; border: 1px solid var(--line); background: #fffdf8; overflow: hidden; }
+      .character-board::after { position: absolute; inset: 26px; border: 1px dashed #e5dac8; content: ""; pointer-events: none; }
+      .character-image { position: absolute; z-index: 2; top: 50%; left: 50%; width: min(78%, 440px); mix-blend-mode: multiply; transform: translate(-50%, -50%); }
+      .dna-pin {
+        position: absolute;
+        z-index: 4;
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        padding: 7px 9px;
+        border: 1px solid var(--ink);
+        background: var(--paper);
+        color: var(--ink);
+        cursor: default;
+        font-family: var(--mono);
+        font-size: 11px;
+        font-weight: 700;
+      }
+      .dna-pin::before { width: 7px; height: 7px; border-radius: 50%; background: var(--orange); content: ""; }
+      .dna-pin.top { top: 70px; right: 48px; }
+      .dna-pin.eye { top: 238px; left: 30px; }
+      .dna-pin.body { bottom: 85px; left: 36px; }
+      .dna-pin.limb { right: 36px; bottom: 172px; }
+      .dna-list { display: grid; gap: 0; border-top: 1px solid var(--ink); }
+      .dna-item { padding: 19px 0; border-bottom: 1px solid var(--line); cursor: default; }
+      .dna-item strong { display: block; margin-bottom: 6px; font-size: 17px; letter-spacing: -0.03em; }
+      .dna-item span { color: var(--ink-soft); font-size: 14px; line-height: 1.6; }
+      .dna-rule { margin: 28px 0 0; padding: 21px 22px; border-left: 3px solid var(--orange); background: #fff4df; font-family: var(--serif); font-size: 29px; letter-spacing: -0.055em; }
+      .dna-rule em { color: var(--orange); font-style: normal; }
+
+      /* Visual lock */
+      .lock-layout { display: grid; grid-template-columns: .92fr 1.08fr; gap: 74px; align-items: center; margin-top: 62px; }
+      .lock-copy { align-self: start; }
+      .lock-tabs { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 34px; }
+      .lock-tab { padding: 9px 11px; border: 1px solid var(--line); border-radius: 999px; background: transparent; cursor: pointer; font-family: var(--mono); font-size: 12px; }
+      .lock-tab:hover, .lock-tab:focus-visible, .lock-tab.is-active { border-color: var(--ink); background: var(--yellow-light); outline: none; }
+      .lock-note { min-height: 79px; margin: 22px 0 0; color: var(--ink-soft); font-size: 15px; line-height: 1.7; }
+      .token-sheet { padding: 25px; border: 1px solid var(--ink); background: #fffdf8; box-shadow: 10px 10px 0 var(--yellow-light); }
+      .token-sheet-header { display: flex; justify-content: space-between; gap: 16px; align-items: center; padding-bottom: 18px; border-bottom: 1px solid var(--line); font-family: var(--mono); font-size: 12px; font-weight: 700; }
+      .token-sheet-header span:last-child { color: var(--green); }
+      .token-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0 26px; margin-top: 6px; }
+      .token { display: flex; justify-content: space-between; gap: 12px; padding: 16px 0; border-bottom: 1px solid var(--line); font-family: var(--mono); font-size: 12px; }
+      .token code { color: var(--ink-soft); }
+      .token-color { display: inline-block; width: 11px; height: 11px; margin-right: 6px; border: 1px solid rgba(0,0,0,.15); vertical-align: -1px; }
+      .token-color.paper { background: var(--paper); }
+      .token-color.yellow { background: var(--yellow); }
+      .token-color.orange { background: var(--orange); }
+      .token-color.blue { background: var(--blue); }
+
+      /* Flow */
+      .workflow { width: 100%; padding-right: 0; padding-left: 0; }
+      .workflow-inner { width: min(var(--max), calc(100% - 48px)); margin: 0 auto; }
+      .workflow-stage { position: relative; padding: 84px 0 52px; margin-top: 60px; border-top: 1px solid var(--ink); border-bottom: 1px solid var(--ink); }
+      .workflow-stage::before { position: absolute; top: 135px; bottom: 108px; left: 50%; width: 1px; background: var(--line); content: ""; }
+      .flow-row { position: relative; display: grid; grid-template-columns: 1fr 110px 1fr; gap: 22px; align-items: center; min-height: 132px; }
+      .flow-row:nth-child(odd) .flow-copy { grid-column: 1; text-align: right; }
+      .flow-row:nth-child(odd) .flow-visual { grid-column: 3; }
+      .flow-row:nth-child(even) .flow-copy { grid-column: 3; grid-row: 1; }
+      .flow-row:nth-child(even) .flow-visual { grid-column: 1; grid-row: 1; }
+      .flow-dot { position: relative; z-index: 3; grid-column: 2; grid-row: 1; display: grid; width: 50px; height: 50px; margin: 0 auto; border: 1px solid var(--ink); border-radius: 50%; background: var(--paper); color: var(--ink-soft); font-family: var(--mono); font-size: 12px; place-items: center; transition: background 350ms var(--ease), transform 350ms var(--ease), box-shadow 350ms var(--ease); }
+      .flow-row.is-visible .flow-dot { background: var(--yellow); color: var(--ink); box-shadow: 5px 5px 0 var(--orange); transform: rotate(-8deg); }
+      .flow-copy h3 { margin: 0; font-size: 24px; letter-spacing: -0.05em; }
+      .flow-copy p { max-width: 385px; margin: 7px 0 0; color: var(--ink-soft); font-size: 14px; line-height: 1.65; }
+      .flow-row:nth-child(odd) .flow-copy p { margin-left: auto; }
+      .flow-visual { display: inline-flex; align-items: center; justify-content: center; min-height: 56px; padding: 13px 18px; border: 1px solid var(--line); background: #fffdf8; color: var(--ink-soft); font-family: var(--mono); font-size: 12px; }
+      .flow-row.is-visible .flow-visual { border-color: #e8bd69; background: #fff4df; }
+      .flow-sentence { margin: 54px 0 0; text-align: center; font-family: var(--serif); font-size: clamp(32px, 4vw, 58px); letter-spacing: -0.07em; }
+      .flow-sentence span { color: var(--orange); }
+
+      /* Archetypes */
+      .archetype-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; margin-top: 61px; border: 1px solid var(--line); background: var(--line); }
+      .archetype { position: relative; min-height: 202px; padding: 20px; border: 0; background: var(--paper); cursor: pointer; text-align: left; transition: background 220ms ease; }
+      .archetype:hover, .archetype:focus-visible, .archetype.is-open { background: #fff0d4; outline: none; }
+      .archetype .shape { display: block; width: 34px; height: 34px; margin-bottom: 40px; border: 1.5px solid var(--ink); }
+      .archetype .shape.vs { position: relative; border-radius: 50%; }
+      .archetype .shape.vs::after { position: absolute; top: -1px; left: 15px; width: 1px; height: 34px; background: var(--coral); content: ""; transform: rotate(43deg); }
+      .archetype .shape.funnel { clip-path: polygon(0 0,100% 0,68% 100%,32% 100%); }
+      .archetype .shape.gate { border-radius: 0 20px 20px 0; }
+      .archetype .shape.loop { border-radius: 50%; border-style: dashed; }
+      .archetype .shape.transform { border-radius: 50% 0 50% 50%; transform: rotate(45deg); }
+      .archetype .shape.branch { width: 38px; border-width: 0 0 0 1.5px; transform: skewY(-32deg); }
+      .archetype .shape.blocks { background: repeating-linear-gradient(90deg, var(--ink) 0 1px, transparent 1px 11px); }
+      .archetype .shape.overview { border-radius: 50%; box-shadow: 10px 10px 0 -8px var(--yellow), -10px -10px 0 -8px var(--blue); }
+      .archetype strong { font-size: 17px; letter-spacing: -0.03em; }
+      .archetype .archetype-detail { display: none; margin-top: 10px; color: var(--ink-soft); font-size: 12px; line-height: 1.55; }
+      .archetype.is-open .archetype-detail { display: block; }
+      .archetype .open-mark { position: absolute; top: 18px; right: 18px; color: var(--orange); font-family: var(--mono); font-size: 14px; }
+
+      /* Case */
+      .case-layout { display: grid; grid-template-columns: .86fr 1.14fr; gap: 78px; align-items: center; margin-top: 60px; }
+      .case-input { padding: 34px; border: 1px solid var(--ink); background: var(--ink); color: var(--paper); }
+      .case-input .eyebrow-note { color: rgba(255,249,239,.56); }
+      .case-input blockquote { margin: 38px 0 0; font-family: var(--serif); font-size: 33px; letter-spacing: -0.055em; line-height: 1.18; }
+      .case-input blockquote em { color: var(--yellow); font-style: normal; }
+      .case-steps { display: grid; gap: 0; border-top: 1px solid var(--ink); }
+      .case-step { display: grid; grid-template-columns: 46px 1fr; gap: 18px; padding: 19px 0; border-bottom: 1px solid var(--line); }
+      .case-step-number { display: grid; width: 32px; height: 32px; border: 1px solid var(--ink); border-radius: 50%; font-family: var(--mono); font-size: 11px; place-items: center; }
+      .case-step h3 { margin: 0; font-size: 17px; letter-spacing: -0.03em; }
+      .case-step p { margin: 5px 0 0; color: var(--ink-soft); font-size: 14px; line-height: 1.55; }
+      .case-result { margin-top: 22px; padding: 14px 16px; border-left: 2px solid var(--blue); background: #f1f8ff; color: var(--ink-soft); font-size: 14px; line-height: 1.6; }
+
+      /* QA */
+      .qa-board { display: grid; grid-template-columns: 1.02fr .98fr; gap: 52px; align-items: stretch; margin-top: 62px; }
+      .qa-checklist { padding: 35px; background: #fffdf8; border: 1px solid var(--line); }
+      .qa-checklist h3 { margin: 0 0 26px; font-size: 26px; letter-spacing: -0.05em; }
+      .qa-item { display: flex; gap: 14px; align-items: center; width: 100%; padding: 13px 0; border: 0; border-bottom: 1px solid var(--line); background: transparent; cursor: pointer; text-align: left; }
+      .qa-item:last-child { border-bottom: 0; }
+      .qa-box { display: grid; flex: 0 0 auto; width: 20px; height: 20px; border: 1px solid var(--ink); font-family: var(--mono); font-size: 13px; place-items: center; }
+      .qa-item[aria-pressed="true"] .qa-box { background: var(--yellow); }
+      .qa-item span:last-child { font-size: 15px; }
+      .qa-result {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        min-height: 100%;
+        padding: 35px;
+        overflow: hidden;
+        background: var(--yellow);
+        border: 1px solid var(--ink);
+      }
+      .qa-result::after { position: absolute; right: -52px; bottom: -52px; width: 238px; height: 238px; border: 1px dashed rgba(21,21,21,.35); border-radius: 50%; content: ""; }
+      .qa-result .tiny-grid { position: relative; z-index: 1; display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; max-width: 290px; }
+      .tiny-grid span { display: grid; aspect-ratio: 1.78; border: 1px solid rgba(21,21,21,.52); background: rgba(255,249,239,.35); font-family: var(--mono); font-size: 11px; place-items: center; }
+      .qa-result h3 { position: relative; z-index: 1; max-width: 420px; margin: 48px 0 0; font-family: var(--serif); font-size: clamp(34px, 3.6vw, 53px); font-weight: 400; letter-spacing: -0.065em; line-height: 1.04; }
+      .qa-result p { position: relative; z-index: 1; max-width: 365px; margin: 18px 0 0; color: #4e3c10; font-size: 14px; line-height: 1.7; }
+
+      /* Finish */
+      .finish { padding-top: 164px; padding-bottom: 108px; }
+      .finish::before { background: var(--ink); }
+      .finish-grid { display: grid; grid-template-columns: 1fr .78fr; gap: 86px; align-items: end; }
+      .finish-title { max-width: 780px; margin: 0; font-size: clamp(52px, 7vw, 105px); font-weight: 800; letter-spacing: -0.085em; line-height: .95; }
+      .finish-title em { color: var(--orange); font-family: var(--serif); font-weight: 400; }
+      .formula {
+        display: grid;
+        grid-template-columns: repeat(3, max-content);
+        gap: 12px 16px;
+        align-items: center;
+        margin-top: 50px;
+        font-family: var(--mono);
+        font-size: clamp(15px, 2vw, 22px);
+        font-weight: 700;
+      }
+      .formula span { padding: 11px 13px; border: 1px solid var(--ink); background: #fffdf8; }
+      .formula i { color: var(--orange); font-style: normal; }
+      .finish-note { max-width: 320px; margin: 0; padding-bottom: 8px; color: var(--ink-soft); font-size: 16px; line-height: 1.75; }
+      .make-steps { display: grid; grid-template-columns: repeat(7, 1fr); gap: 0; margin-top: 105px; border-top: 1px solid var(--ink); border-bottom: 1px solid var(--ink); }
+      .make-step { min-height: 142px; padding: 17px 15px; border-right: 1px solid var(--line); }
+      .make-step:last-child { border-right: 0; }
+      .make-step b { display: block; margin-bottom: 32px; color: var(--orange); font-family: var(--mono); font-size: 11px; }
+      .make-step span { font-size: 15px; font-weight: 700; letter-spacing: -0.03em; }
+      .finish-cta { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-top: 45px; }
+      .source-note { margin-top: 34px; color: var(--ink-soft); font-size: 12px; line-height: 1.7; }
+      footer { padding: 25px 24px; border-top: 1px solid var(--line); color: var(--ink-soft); font-family: var(--mono); font-size: 11px; }
+      .footer-inner { display: flex; justify-content: space-between; gap: 20px; width: min(var(--max), 100%); margin: 0 auto; }
+      .footer-inner a { color: var(--ink); text-decoration: none; }
+
+      @media (max-width: 920px) {
+        .section { padding: 100px 0; }
+        .hero { grid-template-columns: 1fr; min-height: auto; padding-top: 130px; }
+        .hero-stage { min-height: 520px; max-width: 650px; }
+        .problem-grid, .router-grid, .dna-grid, .lock-layout, .case-layout, .qa-board, .finish-grid { grid-template-columns: 1fr; gap: 46px; }
+        .mode-grid { grid-template-columns: 1fr; }
+        .example-gallery { grid-template-columns: repeat(3, 1fr); }
+        .mode { min-height: 280px; }
+        .mode h3 { margin-top: 48px; }
+        .architecture-board { min-height: 640px; }
+        .arch-node[data-node="assets"] { top: 52px; left: 7%; }
+        .arch-node[data-node="references"] { top: 52px; right: 7%; }
+        .arch-node[data-node="image"] { top: 43%; left: 3%; }
+        .arch-node[data-node="quality"] { top: 43%; right: 3%; }
+        .arch-node[data-node="examples"] { bottom: 75px; left: 7%; }
+        .arch-node[data-node="tokens"] { right: 7%; bottom: 75px; }
+        .flow-strip { grid-template-columns: repeat(4, 1fr); }
+        .archetype-grid { grid-template-columns: repeat(3, 1fr); }
+        .make-steps { grid-template-columns: repeat(4, 1fr); }
+        .make-step:nth-child(4) { border-right: 0; }
+        .finish-note { max-width: 600px; }
+      }
+      @media (max-width: 640px) {
+        .site-header { height: 56px; }
+        .progress-track { top: 55px; }
+        .nav { width: min(var(--max), calc(100% - 32px)); }
+        .nav-links a:not(.nav-github) { display: none; }
+        .nav-github { padding: 7px 9px; font-size: 11px !important; }
+        .section { width: min(var(--max), calc(100% - 32px)); padding: 78px 0; }
+        .hero { padding-top: 96px; padding-bottom: 74px; }
+        .hero h1 { font-size: clamp(42px, 11vw, 52px); }
+        .hero h1 em { font-size: .7em; }
+        .hero-lede { font-size: 17px; }
+        .hero-stage { min-height: 440px; }
+        .hero-character { right: -5px; width: min(94%, 390px); }
+        .experience-stack { bottom: 26px; left: 20px; width: 170px; }
+        .experience-stack span { padding: 8px 9px; font-size: 11px; }
+        .sketch-label.one { top: 35px; left: 20px; }
+        .sketch-label.two { right: 18px; bottom: 46px; }
+        .arrow-scribble { top: 48%; left: 163px; width: 70px; }
+        .section-title { font-size: clamp(36px, 11vw, 53px); }
+        .section-intro { font-size: 16px; }
+        .problem-grid { margin-top: 45px; }
+        .problem-quote { padding: 38px 28px; }
+        .compare-heading { display: block; }
+        .segmented { margin-top: 24px; }
+        .compare-stage { grid-template-columns: 1fr; margin-top: 38px; }
+        .compare-panel { min-height: auto; padding: 30px 26px; }
+        .compare-arrow { height: 64px; }
+        .compare-arrow::before { width: 100%; height: 1px; }
+        .compare-arrow span { transform: rotate(90deg); }
+        .architecture-board { min-height: 645px; margin-top: 43px; }
+        .architecture-board::before { width: 250px; height: 250px; }
+        .architecture-board::after { width: 90%; }
+        .system-core { width: 140px; height: 140px; box-shadow: 7px 7px 0 var(--orange); }
+        .system-core span { font-size: 16px; }
+        .arch-node { padding: 8px 9px; font-size: 10px; }
+        .arch-node[data-node="assets"] { top: 45px; left: 5%; }
+        .arch-node[data-node="references"] { top: 45px; right: 5%; }
+        .arch-node[data-node="image"] { top: 36%; left: 3%; }
+        .arch-node[data-node="quality"] { top: 36%; right: 3%; }
+        .arch-node[data-node="examples"] { bottom: 99px; left: 5%; }
+        .arch-node[data-node="tokens"] { right: 5%; bottom: 99px; }
+        .arch-detail { right: 15px; bottom: 15px; width: calc(100% - 30px); }
+        .flow-strip { grid-template-columns: repeat(2, 1fr); }
+        .flow-strip span { padding: 12px 9px; }
+        .router-grid, .dna-grid, .lock-layout, .case-layout, .qa-board, .finish-grid { gap: 34px; margin-top: 43px; }
+        .tree-row { grid-template-columns: 20px minmax(110px, .82fr) 1.1fr; gap: 6px; }
+        .tree-purpose { font-size: 11px; }
+        .character-board { min-height: 440px; }
+        .dna-pin { font-size: 9px; padding: 5px 7px; }
+        .dna-pin.top { top: 46px; right: 18px; }
+        .dna-pin.eye { top: 178px; left: 14px; }
+        .dna-pin.body { bottom: 46px; left: 17px; }
+        .dna-pin.limb { right: 16px; bottom: 123px; }
+        .token-sheet { padding: 18px; box-shadow: 6px 6px 0 var(--yellow-light); }
+        .token-grid { grid-template-columns: 1fr; }
+        .workflow { width: 100%; }
+        .workflow-inner { width: min(var(--max), calc(100% - 32px)); }
+        .workflow-stage { padding: 48px 0 31px; }
+        .workflow-stage::before { left: 24px; top: 94px; bottom: 68px; }
+        .flow-row, .flow-row:nth-child(even) { grid-template-columns: 50px 1fr; grid-template-rows: auto auto; gap: 14px; min-height: 0; padding-bottom: 28px; }
+        .flow-dot, .flow-row:nth-child(even) .flow-dot { grid-column: 1; }
+        .flow-copy, .flow-row:nth-child(odd) .flow-copy, .flow-row:nth-child(even) .flow-copy { grid-column: 2; grid-row: 1; text-align: left; }
+        .flow-visual, .flow-row:nth-child(odd) .flow-visual, .flow-row:nth-child(even) .flow-visual { grid-column: 2; grid-row: 2; align-self: auto; justify-self: stretch; margin-top: 0; }
+        .flow-row:nth-child(odd) .flow-copy p { margin-left: 0; }
+        .archetype-grid { grid-template-columns: repeat(2, 1fr); }
+        .example-gallery { grid-template-columns: 1fr; gap: 18px; }
+        .archetype { min-height: 180px; }
+        .qa-checklist, .qa-result { padding: 27px; }
+        .finish { padding-top: 104px; }
+        .finish-title { font-size: clamp(48px, 14vw, 74px); }
+        .formula { grid-template-columns: repeat(3, max-content); gap: 8px; font-size: 12px; }
+        .formula span { padding: 8px; }
+        .make-steps { grid-template-columns: repeat(2, 1fr); margin-top: 69px; }
+        .make-step:nth-child(even) { border-right: 0; }
+        .make-step { min-height: 122px; border-bottom: 1px solid var(--line); }
+        .make-step:nth-last-child(-n+2) { border-bottom: 0; }
+        .footer-inner { display: block; line-height: 1.7; }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; }
+        .reveal { opacity: 1; transform: none; }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="site-header" id="site-header">
+      <nav class="nav" aria-label="主导航">
+        <a class="brand" href="#top" aria-label="回到页面顶部"><span class="brand-mark" aria-hidden="true"></span><span>CS / XIAOHUANG</span></a>
+        <div class="nav-links">
+          <a href="#architecture">系统架构</a>
+          <a href="#workflow">生成流程</a>
+          <a href="#make">自己做一个</a>
+          <a class="nav-github" href="https://github.com/ChenShuo2004/cs-xiaohuang-skill" target="_blank" rel="noreferrer">GitHub <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+        </div>
+      </nav>
+    </header>
+    <div class="progress-track" aria-hidden="true"><span id="progress-bar"></span></div>
+
+    <main id="top">
+      <section class="section hero" aria-labelledby="hero-title">
+        <div class="hero-copy reveal">
+          <span class="repo-label"><span class="repo-dot" aria-hidden="true"></span>GitHub Repository · ChenShuo2004/cs-xiaohuang-skill</span>
+          <h1 id="hero-title">我是怎么做出<br /><em>cs-xiaohuang-skill</em> 的</h1>
+          <p class="hero-lede">从一个小黄 IP，到一套可以被 Codex / Agent 重复调用的视觉生成系统。</p>
+          <div class="hero-actions">
+            <a class="button button-primary" href="https://github.com/ChenShuo2004/cs-xiaohuang-skill" target="_blank" rel="noreferrer">查看 GitHub <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+            <a class="button button-secondary" href="#problem">开始阅读 <span aria-hidden="true">↓</span></a>
+          </div>
+        </div>
+        <div class="hero-stage reveal" style="transition-delay: 120ms" aria-label="小黄把经验整理成规则的示意图">
+          <span class="sketch-label one">反复做过的事</span>
+          <span class="sketch-label two">可复用的规则</span>
+          <div class="experience-stack" aria-hidden="true"><span>PPT 叙事</span><span>文章配图</span><span>小黄 IP</span></div>
+          <span class="arrow-scribble" aria-hidden="true"></span>
+          <img class="hero-character" src="assets/reference-xiaohuang.png" alt="小黄角色参考图" />
+        </div>
+      </section>
+
+      <section class="section" id="problem" aria-labelledby="problem-title">
+        <p class="section-kicker reveal">01 / The friction</p>
+        <h2 class="section-title reveal" id="problem-title">一开始，我只是想解决一个很简单的问题。</h2>
+        <div class="problem-grid">
+          <div class="issue-list reveal">
+            <div class="issue"><span class="issue-index">01</span><span>Prompt 每次都要重新写</span><span class="issue-mark" aria-label="问题"></span></div>
+            <div class="issue"><span class="issue-index">02</span><span>风格、角色与叙事每次都漂移</span><span class="issue-mark" aria-label="问题"></span></div>
+            <div class="issue"><span class="issue-index">03</span><span>AI 常把文章直接做成 bullet points</span><span class="issue-mark" aria-label="问题"></span></div>
+            <div class="issue"><span class="issue-index">04</span><span>中文、页间节奏与视觉质量需要反复补救</span><span class="issue-mark" aria-label="问题"></span></div>
+            <div class="issue"><span class="issue-index">05</span><span>每次都得重新把隐性经验说给 AI 听</span><span class="issue-mark" aria-label="问题"></span></div>
+          </div>
+          <aside class="problem-quote reveal" style="transition-delay: 100ms">
+            <p class="eyebrow-note">THE REAL PROBLEM</p>
+            <p>问题不是 Prompt <strong>不够长</strong>，而是缺少一套长期可复用的规则系统。</p>
+          </aside>
+        </div>
+      </section>
+
+      <section class="section" aria-labelledby="compare-title">
+        <div class="compare-heading">
+          <div>
+            <p class="section-kicker reveal">02 / The shift</p>
+            <h2 class="section-title reveal" id="compare-title">从 Prompt，到 Skill。</h2>
+          </div>
+          <div class="segmented reveal" role="group" aria-label="查看 Prompt 或 Skill 的特点">
+            <button type="button" data-compare="prompt" aria-pressed="false">看 Prompt</button>
+            <button type="button" data-compare="skill" aria-pressed="true">看 Skill</button>
+          </div>
+        </div>
+        <div class="compare-stage reveal" id="compare-stage" data-mode="skill">
+          <article class="compare-panel prompt-panel">
+            <h3>Prompt</h3>
+            <p class="panel-tag">ONE-OFF INSTRUCTION</p>
+            <ul class="compare-list"><li>一次性指令</li><li>依赖当前上下文</li><li>规则混在一起</li><li>结果容易漂移</li><li>难以维护和组合</li></ul>
+          </article>
+          <div class="compare-arrow" aria-hidden="true"><span>→</span></div>
+          <article class="compare-panel skill-panel">
+            <h3>Skill</h3>
+            <p class="panel-tag">REUSABLE OPERATING SYSTEM</p>
+            <ul class="compare-list"><li>长期规则</li><li>模块化加载</li><li>按任务组合</li><li>可维护、可迭代</li><li>可被 Agent 自动读取</li></ul>
+          </article>
+        </div>
+        <p class="compare-takeaway reveal">Skill = 把经验变成 AI 可以<strong>重复执行</strong>的 SOP。</p>
+      </section>
+
+      <section class="section" aria-labelledby="modes-title">
+        <p class="section-kicker reveal">03 / Three modes</p>
+        <h2 class="section-title reveal" id="modes-title">cs-xiaohuang-skill 到底是什么？</h2>
+        <p class="section-intro reveal">它不是 PPT 模板，也不只是一个角色提示词。仓库把稳定的视觉生产需求分成三个可以独立调用的输出模式。</p>
+        <div class="mode-grid reveal">
+          <article class="mode"><span class="mode-number">01</span><h3>Brand IP</h3><p>生成、延展与修复小黄的标准角色资产，同时锁住身份锚点。</p><div class="mode-tags"><span>标准图</span><span>动作表情</span><span>三视图</span><span>2D / 3D</span><span>联名</span></div><p class="mode-footer">IDENTITY FIRST</p></article>
+          <article class="mode"><span class="mode-number">02</span><h3>Deck</h3><p>把文章、课程、演讲或想法，转成有叙事、有动作、有语义结构的 PNG 页面图。</p><div class="mode-tags"><span>课程</span><span>分享</span><span>产品说明</span><span>工作流</span></div><p class="mode-footer">NARRATIVE FIRST</p></article>
+          <article class="mode"><span class="mode-number">03</span><h3>Article Illustration</h3><p>为文章选出真正值得解释的认知锚点，生成封面与正文配图，而不是机械配图。</p><div class="mode-tags"><span>21:9 封面</span><span>16:9 正文图</span><span>shot list</span></div><p class="mode-footer">ANCHOR FIRST</p></article>
+        </div>
+        <div class="example-gallery reveal" style="transition-delay: 80ms" aria-label="仓库 examples/images 中的小黄示例页面">
+          <figure><img src="assets/01-cognitive-anchor.png" alt="小黄示例：一个核心动作" /><figcaption>examples/images/01-cognitive-anchor.png</figcaption></figure>
+          <figure><img src="assets/03-relation-reveal.png" alt="小黄示例：把关系画出来" /><figcaption>examples/images/03-relation-reveal.png</figcaption></figure>
+          <figure><img src="assets/05-metaphor-translation.png" alt="小黄示例：抽象概念变得可见" /><figcaption>examples/images/05-metaphor-translation.png</figcaption></figure>
+        </div>
+      </section>
+
+      <section class="section architecture" id="architecture" aria-labelledby="architecture-title">
+        <p class="section-kicker reveal">04 / System architecture</p>
+        <h2 class="section-title reveal" id="architecture-title">Skill 的整体架构，不是一份超长说明书。</h2>
+        <p class="section-intro reveal">中心是负责判断与调度的 <code>SKILL.md</code>；四周是按需被读取的规则、资产和示例。点击节点，查看它们在真实仓库中的职责。</p>
+        <div class="architecture-board reveal">
+          <div class="system-core" aria-label="SKILL.md 是系统调度器"><span>SKILL.md<small>ROUTER</small></span></div>
+          <button class="arch-node" type="button" data-node="assets" data-title="assets/" data-copy="保存唯一的小黄身份参考图与 theme-tokens.json。它们不是装饰素材，而是角色和色彩的固定锚点。">assets/</button>
+          <button class="arch-node" type="button" data-node="references" data-title="references/" data-copy="按任务读取的知识模块：intake、叙事、页面 archetype、角色 DNA、视觉 DNA、提示词和 QA。">references/</button>
+          <button class="arch-node" type="button" data-node="examples" data-title="examples/" data-copy="用可复制的调用方式，帮助使用者说清楚自己想生成 Deck、文章配图，还是品牌 IP。">examples/</button>
+          <button class="arch-node" type="button" data-node="tokens" data-title="theme-tokens.json" data-copy="把画布比例、颜色、母版、文字预算与交付边界压缩成机器稳定读取的 style lock。">theme tokens</button>
+          <button class="arch-node" type="button" data-node="image" data-title="reference-xiaohuang.png" data-copy="唯一身份锚点。任何图像生成和验收都先看它，再谈场景、动作或媒介。">reference image</button>
+          <button class="arch-node" type="button" data-node="quality" data-title="output-quality.md" data-copy="生成不是结束：检查角色身份、文字、比例、构图、整套节奏，并以 contact sheet 统一验收。">output quality</button>
+          <div class="arch-detail" id="arch-detail" aria-live="polite"><strong>SKILL.md</strong><p>根据用户意图决定输出模式、读取哪些文件、执行顺序、默认值、强制规则与最终交付方式。</p></div>
+        </div>
+        <div class="flow-strip reveal" aria-label="真实工作流顺序"><span>User Input</span><span>SKILL.md</span><span>Intake</span><span>Narrative</span><span>Archetype</span><span>DNA + Prompt</span><span>Generate</span><span>QA</span></div>
+      </section>
+
+      <section class="section" aria-labelledby="router-title">
+        <p class="section-kicker reveal">05 / Routing, not dumping</p>
+        <h2 class="section-title reveal" id="router-title">SKILL.md 是整个系统的调度器。</h2>
+        <div class="router-grid">
+          <article class="router-card reveal"><span class="file-icon" aria-hidden="true"></span><h3>SKILL.md</h3><p>判断用户意图，选择 Brand IP / Deck / Article Illustration，决定要读取哪些 references，并定义流程和交付边界。</p><p class="router-rule">它是 Router，不是知识库。</p></article>
+          <div class="reveal" style="transition-delay: 100ms">
+            <div class="file-tree" aria-label="真实仓库的 references 文件树">
+              <button class="tree-row" type="button" data-file="intake.md" data-file-copy="输入判断、默认受众与长度、何时需要追问。"><span class="branch">├─</span><span class="tree-name">intake.md</span><span class="tree-purpose">读懂素材与缺口</span></button>
+              <button class="tree-row" type="button" data-file="narrative-planning.md" data-file-copy="为教学、说服、产品解释或复盘选择故事骨架，并定义逐页 blueprint 字段。"><span class="branch">├─</span><span class="tree-name">narrative-planning.md</span><span class="tree-purpose">先做叙事，再画页面</span></button>
+              <button class="tree-row" type="button" data-file="slide-archetypes.md" data-file-copy="让页面结构由内容关系决定：对比、筛选、阻塞、循环、分叉、搭建或总结。"><span class="branch">├─</span><span class="tree-name">slide-archetypes.md</span><span class="tree-purpose">语义选择版式</span></button>
+              <button class="tree-row" type="button" data-file="character-dna.md" data-file-copy="锁定小黄不可改变的轮廓、天线、脸、四肢与配色，身份优先于场景和媒介。"><span class="branch">├─</span><span class="tree-name">character-dna.md</span><span class="tree-purpose">锁定角色身份</span></button>
+              <button class="tree-row" type="button" data-file="visual-dna.md" data-file-copy="统一暖白画布、黑色轻手绘线、克制标色、留白与每页文字预算。"><span class="branch">├─</span><span class="tree-name">visual-dna.md</span><span class="tree-purpose">锁定整套视觉</span></button>
+              <button class="tree-row" type="button" data-file="prompt-patterns.md" data-file-copy="将固定 style lock 与可变的每页构图、动作、短文字组装成准确的生成提示词。"><span class="branch">├─</span><span class="tree-name">prompt-patterns.md</span><span class="tree-purpose">组装逐页提示词</span></button>
+              <button class="tree-row" type="button" data-file="output-quality.md" data-file-copy="定义角色、中文、比例、视觉与 contact sheet 的质量门槛。"><span class="branch">└─</span><span class="tree-name">output-quality.md</span><span class="tree-purpose">生成后验收</span></button>
+            </div>
+            <p class="tree-status" id="tree-status"><strong>核心原则：</strong>一个文件只解决一类问题。选择任一文件，查看它在系统中的真实职责。</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" aria-labelledby="character-title">
+        <p class="section-kicker reveal">06 / Character DNA</p>
+        <h2 class="section-title reveal" id="character-title">怎么保证小黄还是小黄？</h2>
+        <div class="dna-grid">
+          <div class="character-board reveal" aria-label="小黄角色 DNA 参考图"><img class="character-image" src="assets/reference-xiaohuang.png" alt="暖黄色、不规则种子形小黄，带有空心爱心天线" /><span class="dna-pin top">空心爱心天线</span><span class="dna-pin eye">竖椭圆眼</span><span class="dna-pin body">不规则种子身体</span><span class="dna-pin limb">细黑四肢</span></div>
+          <div class="reveal" style="transition-delay: 100ms">
+            <div class="dna-list">
+              <div class="dna-item"><strong>不可以改变</strong><span>暖黄色、略倾斜的种子轮廓；爱心天线；宽间距黑色竖椭圆眼；微笑、腮红和细黑四肢。</span></div>
+              <div class="dna-item"><strong>可以改变</strong><span>动作、表情、场景、服装、媒介、光线、构图与支持故事的物件。</span></div>
+              <div class="dna-item"><strong>优先级</strong><span>身份锚点 → 用户明确的变量 → 当前页面语义 → 风格与装饰。</span></div>
+              <div class="dna-item"><strong>角色职责</strong><span>筛、捞、扛、拆、接、压、修、推、记录；小黄必须承担关键动作，不能只站在角落。</span></div>
+            </div>
+            <p class="dna-rule">可以换世界，<em>不能换身份。</em></p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" aria-labelledby="visual-title">
+        <p class="section-kicker reveal">07 / Visual DNA</p>
+        <h2 class="section-title reveal" id="visual-title">怎么保证每一页属于同一个世界？</h2>
+        <div class="lock-layout">
+          <div class="lock-copy reveal">
+            <p class="section-intro">一致性不是每一页都长得一样，而是先把可复用的视觉不变量写进 Style Lock：画布、颜色、线条、留白、角色与文字预算全部先确定。</p>
+            <div class="lock-tabs" role="tablist" aria-label="Style Lock 组成">
+              <button class="lock-tab is-active" type="button" role="tab" aria-selected="true" data-lock="Canvas">Canvas</button>
+              <button class="lock-tab" type="button" role="tab" aria-selected="false" data-lock="Typography">Typography</button>
+              <button class="lock-tab" type="button" role="tab" aria-selected="false" data-lock="Palette">Palette</button>
+              <button class="lock-tab" type="button" role="tab" aria-selected="false" data-lock="Stroke">Stroke</button>
+              <button class="lock-tab" type="button" role="tab" aria-selected="false" data-lock="Spacing">Spacing</button>
+              <button class="lock-tab" type="button" role="tab" aria-selected="false" data-lock="Character">Character</button>
+            </div>
+            <p class="lock-note" id="lock-note"><strong>Canvas：</strong>标准 Deck 为 16:9，推荐 1920 × 1080；暖白背景占主导，主动作占画面 40%–60%，至少保留三分之一安静空间。</p>
+          </div>
+          <aside class="token-sheet reveal" style="transition-delay: 110ms" aria-label="来自 theme-tokens.json 的简化风格锁">
+            <div class="token-sheet-header"><span>theme-tokens.json</span><span>STYLE LOCKED</span></div>
+            <div class="token-grid">
+              <div class="token"><span>paper</span><code><i class="token-color paper"></i>#FFF9EF</code></div>
+              <div class="token"><span>xiaohuang</span><code><i class="token-color yellow"></i>#F6B72A</code></div>
+              <div class="token"><span>heart_orange</span><code><i class="token-color orange"></i>#F59A23</code></div>
+              <div class="token"><span>feedback</span><code><i class="token-color blue"></i>#5D9ED8</code></div>
+              <div class="token"><span>labels</span><code>2–5 preferred</code></div>
+              <div class="token"><span>subject</span><code>40–60% area</code></div>
+              <div class="token"><span>page shell</span><code>fixed</code></div>
+              <div class="token"><span>variation</span><code>semantic action</code></div>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <section class="section workflow" id="workflow" aria-labelledby="workflow-title">
+        <div class="workflow-inner">
+          <p class="section-kicker reveal">08 / Think before draw</p>
+          <h2 class="section-title reveal" id="workflow-title">内容不是直接生成图片。</h2>
+          <p class="section-intro reveal">真正的过程是逐层把内容变成一个可执行的视觉决定。图像模型在最后一段才出现。</p>
+          <div class="workflow-stage">
+            <article class="flow-row reveal"><div class="flow-copy"><h3>原始文章</h3><p>输入可以是文章、课程、演讲提纲、产品说明，甚至一个粗略想法。</p></div><div class="flow-dot">01</div><div class="flow-visual">raw material</div></article>
+            <article class="flow-row reveal"><div class="flow-copy"><h3>Intake</h3><p>抽取主题、受众、场景、核心判断、可视化关系与内容缺口。</p></div><div class="flow-dot">02</div><div class="flow-visual">what matters?</div></article>
+            <article class="flow-row reveal"><div class="flow-copy"><h3>Narrative Planning</h3><p>选择教学、说服、产品解释或复盘的故事骨架；确定每页只讲一个判断。</p></div><div class="flow-dot">03</div><div class="flow-visual">story first</div></article>
+            <article class="flow-row reveal"><div class="flow-copy"><h3>Slide Blueprint</h3><p>逐页写标题、主旨、archetype、小黄动作、可见文字和图像 brief。</p></div><div class="flow-dot">04</div><div class="flow-visual">one idea / page</div></article>
+            <article class="flow-row reveal"><div class="flow-copy"><h3>Semantic Layout</h3><p>根据对比、筛选、阻塞、循环、分叉或搭建等关系，选择页面结构。</p></div><div class="flow-dot">05</div><div class="flow-visual">relationship → layout</div></article>
+            <article class="flow-row reveal"><div class="flow-copy"><h3>Prompt → Generate → QA</h3><p>在同一套 Style Lock 下逐张生成，再检查角色、中文、比例和整套节奏。</p></div><div class="flow-dot">06</div><div class="flow-visual">review as a set</div></article>
+          </div>
+          <p class="flow-sentence reveal">先思考，<span>再画图。</span></p>
+        </div>
+      </section>
+
+      <section class="section" aria-labelledby="archetype-title">
+        <p class="section-kicker reveal">09 / Semantic layout</p>
+        <h2 class="section-title reveal" id="archetype-title">Layout 不是模板决定的，而是内容关系决定的。</h2>
+        <p class="section-intro reveal">仓库的 <code>slide-archetypes.md</code> 给出一组语义映射：不是让每一页套模板，而是为这一页的关系，选择一个最容易被理解的画面结构。点击任意结构展开。</p>
+        <div class="archetype-grid reveal">
+          <button class="archetype" type="button"><span class="shape vs"></span><strong>对比 / VS</strong><span class="open-mark">+</span><span class="archetype-detail">误解 vs 正解：从左侧拉线、搬到右侧或剪断旧连接。</span></button>
+          <button class="archetype" type="button"><span class="shape funnel"></span><strong>筛选 / Funnel</strong><span class="open-mark">+</span><span class="archetype-detail">把杂乱输入筛出真正重要的东西。</span></button>
+          <button class="archetype" type="button"><span class="shape gate"></span><strong>阻塞 / Gate</strong><span class="open-mark">+</span><span class="archetype-detail">聚焦一个卡点：守住、修补或打开一个关口。</span></button>
+          <button class="archetype" type="button"><span class="shape loop"></span><strong>循环 / Loop</strong><span class="open-mark">+</span><span class="archetype-detail">记录、回收、调整一个装置，表达反馈与迭代。</span></button>
+          <button class="archetype" type="button"><span class="shape transform"></span><strong>转化 / Before → After</strong><span class="open-mark">+</span><span class="archetype-detail">通过修复、筛选、整理或推过一道门，让变化可见。</span></button>
+          <button class="archetype" type="button"><span class="shape branch"></span><strong>分叉 / Decision</strong><span class="open-mark">+</span><span class="archetype-detail">在路口举牌、开门或选择轨道，表达条件与选择。</span></button>
+          <button class="archetype" type="button"><span class="shape blocks"></span><strong>搭建 / Blocks</strong><span class="open-mark">+</span><span class="archetype-detail">把对象放进抽屉、架子或层级，表达分类与构成。</span></button>
+          <button class="archetype" type="button"><span class="shape overview"></span><strong>总结 / Overview</strong><span class="open-mark">+</span><span class="archetype-detail">把关键物件装进一个小盒子，留下能带走的判断。</span></button>
+        </div>
+      </section>
+
+      <section class="section" aria-labelledby="case-title">
+        <p class="section-kicker reveal">10 / One image, step by step</p>
+        <h2 class="section-title reveal" id="case-title">一张图是怎么生成出来的？</h2>
+        <div class="case-layout">
+          <article class="case-input reveal"><p class="eyebrow-note">ONE RAW SENTENCE</p><blockquote>“AI Skill 的本质，是把个人<em>经验</em>变成机器可以重复执行的<em>规则</em>。”</blockquote></article>
+          <div class="case-steps reveal" style="transition-delay: 100ms">
+            <article class="case-step"><span class="case-step-number">01</span><div><h3>提取核心关系</h3><p>经验 → 规则。核心不是解释 AI，而是让“从混乱到可复用”的转化可见。</p></div></article>
+            <article class="case-step"><span class="case-step-number">02</span><div><h3>选择 Archetype</h3><p>选 Transformation，而不是普通流程图：画出前后两个状态和中间的搬运动作。</p></div></article>
+            <article class="case-step"><span class="case-step-number">03</span><div><h3>安排小黄动作</h3><p>小黄把一堆杂乱的“经验纸条”搬进一个标记为“规则”的低科技盒子。</p></div></article>
+            <article class="case-step"><span class="case-step-number">04</span><div><h3>加入 Style Lock</h3><p>暖白画布、轻手绘黑线、黄色只给小黄、中文短标注、足够留白。</p></div></article>
+            <article class="case-step"><span class="case-step-number">05</span><div><h3>生成并 QA</h3><p>检查身份锚点、标注、关系是否清楚，以及它是否能和整套页面放在一起。</p></div></article>
+            <p class="case-result"><strong>结果：</strong>图像不是“文章的缩略图”，而是一个能把抽象关系讲明白的视觉句子。</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" aria-labelledby="qa-title">
+        <p class="section-kicker reveal">11 / QA is part of the skill</p>
+        <h2 class="section-title reveal" id="qa-title">生成不是结束，验收才是结束。</h2>
+        <p class="section-intro reveal"><code>output-quality.md</code> 明确把验收写进工作流：不是看一张图“还不错”就交付，而是确认每张图和整套图都稳定成立。</p>
+        <div class="qa-board">
+          <div class="qa-checklist reveal"><h3>逐张检查</h3>
+            <button class="qa-item" type="button" aria-pressed="false"><span class="qa-box"></span><span>角色检查：小黄的轮廓、爱心天线、脸和细四肢都正确</span></button>
+            <button class="qa-item" type="button" aria-pressed="false"><span class="qa-box"></span><span>文字检查：中文短、准、没有额外伪文字或 URL</span></button>
+            <button class="qa-item" type="button" aria-pressed="false"><span class="qa-box"></span><span>比例检查：16:9 / 21:9 和画面呼吸感正确</span></button>
+            <button class="qa-item" type="button" aria-pressed="false"><span class="qa-box"></span><span>逻辑检查：一个主观点、一种可见关系、一项关键动作</span></button>
+            <button class="qa-item" type="button" aria-pressed="false"><span class="qa-box"></span><span>视觉检查：style lock、色彩与文字层级都稳定</span></button>
+          </div>
+          <aside class="qa-result reveal" style="transition-delay: 100ms"><div class="tiny-grid" aria-label="Contact sheet 缩略图示意"><span>01</span><span>02</span><span>03</span><span>04</span><span>05</span><span>06</span></div><div><h3>多图生成后，用 Contact Sheet 统一检查。</h3><p>相邻页面有没有布局雷同？角色有没有身份漂移？留白、线条和调色还能不能看出它们属于同一套作品？</p></div></aside>
+        </div>
+      </section>
+
+      <section class="section finish" id="make" aria-labelledby="finish-title">
+        <p class="section-kicker reveal">12 / Make your own</p>
+        <div class="finish-grid">
+          <div class="reveal"><h2 class="finish-title" id="finish-title">最终做出来的，不是一个 Prompt。<br />而是一套<em>工作流。</em></h2><div class="formula" aria-label="可复用 Skill 的构成公式"><span>IP</span><i>+</i><span>Rules</span><i>+</i><span>Workflow</span><i>+</i><span>Examples</span><i>+</i><span>QA</span><i>=</i><span>Reusable Skill</span></div></div>
+          <p class="finish-note reveal" style="transition-delay: 100ms">把你反复完成的工作拆成清晰的输入、规则、变量、示例与验收方式。你的经验，就能从“只能靠你自己讲清楚”变成“AI 可以稳定调用的工具”。</p>
+        </div>
+        <div class="make-steps reveal" aria-label="做一个 Skill 的七个步骤">
+          <div class="make-step"><b>STEP 01</b><span>找到重复做的事情</span></div>
+          <div class="make-step"><b>STEP 02</b><span>记录反复说的规则</span></div>
+          <div class="make-step"><b>STEP 03</b><span>区分不变量与变量</span></div>
+          <div class="make-step"><b>STEP 04</b><span>按问题拆 references</span></div>
+          <div class="make-step"><b>STEP 05</b><span>用 SKILL.md 定义顺序</span></div>
+          <div class="make-step"><b>STEP 06</b><span>加入 examples</span></div>
+          <div class="make-step"><b>STEP 07</b><span>把 QA 写进交付</span></div>
+        </div>
+        <div class="finish-cta reveal"><a class="button button-primary" href="https://github.com/ChenShuo2004/cs-xiaohuang-skill" target="_blank" rel="noreferrer">查看开源仓库 <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a><a class="button button-secondary" href="#top">回到顶部 ↑</a></div>
+        <p class="source-note reveal">本页的系统结构、文件职责、输出模式、角色与视觉 DNA、质量门槛，均整理自本地仓库的 README、SKILL.md、references/、assets/theme-tokens.json 与 examples/prompts.md。</p>
+      </section>
+    </main>
+
+    <footer><div class="footer-inner"><span>Built as an interactive tutorial · 2026</span><a href="https://github.com/ChenShuo2004/cs-xiaohuang-skill" target="_blank" rel="noreferrer">ChenShuo2004/cs-xiaohuang-skill ↗</a></div></footer>
+
+    <script>
+      (function () {
+        const progressBar = document.getElementById('progress-bar');
+        const header = document.getElementById('site-header');
+        const updateProgress = function () {
+          const max = document.documentElement.scrollHeight - window.innerHeight;
+          const value = max > 0 ? (window.scrollY / max) * 100 : 0;
+          progressBar.style.width = value + '%';
+          header.classList.toggle('is-scrolled', window.scrollY > 12);
+        };
+        window.addEventListener('scroll', updateProgress, { passive: true });
+        updateProgress();
+
+        const revealObserver = new IntersectionObserver(function (entries) {
+          entries.forEach(function (entry) {
+            if (entry.isIntersecting) { entry.target.classList.add('is-visible'); revealObserver.unobserve(entry.target); }
+          });
+        }, { threshold: 0.12 });
+        document.querySelectorAll('.reveal').forEach(function (item) { revealObserver.observe(item); });
+
+        const flowObserver = new IntersectionObserver(function (entries) {
+          entries.forEach(function (entry) { if (entry.isIntersecting) entry.target.classList.add('is-visible'); });
+        }, { threshold: 0.6 });
+        document.querySelectorAll('.flow-row').forEach(function (item) { flowObserver.observe(item); });
+
+        const compareStage = document.getElementById('compare-stage');
+        document.querySelectorAll('[data-compare]').forEach(function (button) {
+          button.addEventListener('click', function () {
+            document.querySelectorAll('[data-compare]').forEach(function (item) { item.setAttribute('aria-pressed', String(item === button)); });
+            compareStage.dataset.mode = button.dataset.compare;
+          });
+        });
+
+        const archDetail = document.getElementById('arch-detail');
+        document.querySelectorAll('.arch-node').forEach(function (node) {
+          const setDetail = function () {
+            document.querySelectorAll('.arch-node').forEach(function (item) { item.classList.remove('is-active'); });
+            node.classList.add('is-active');
+            archDetail.innerHTML = '<strong>' + node.dataset.title + '</strong><p>' + node.dataset.copy + '</p>';
+          };
+          node.addEventListener('click', setDetail);
+          node.addEventListener('focus', setDetail);
+        });
+
+        const treeStatus = document.getElementById('tree-status');
+        document.querySelectorAll('.tree-row').forEach(function (row) {
+          row.addEventListener('click', function () { treeStatus.innerHTML = '<strong>' + row.dataset.file + '：</strong>' + row.dataset.fileCopy; });
+        });
+
+        const lockNotes = {
+          Canvas: '<strong>Canvas：</strong>标准 Deck 为 16:9，推荐 1920 × 1080；暖白背景占主导，主动作占画面 40%–60%，至少保留三分之一安静空间。',
+          Typography: '<strong>Typography：</strong>标题偏短且全套光学等大；可见中文通常只有 2–5 个主标注，每项尽量保持 2–6 字。',
+          Palette: '<strong>Palette：</strong>黄只给小黄；红橙只标问题或结果；蓝只标反馈或系统状态，避免把画面做成彩色信息图。',
+          Stroke: '<strong>Stroke：</strong>使用略有自然抖动的黑色手绘线，物件偏向纸箱、抽屉、筛网、漏斗、闸门和梯子等低科技隐喻。',
+          Spacing: '<strong>Spacing：</strong>固定母版与稳定留白；只让中间的语义动作变化，而不是每页都换一套布局。',
+          Character: '<strong>Character：</strong>小黄是解释关系的操作员，不是角落贴纸。删掉它后页面仍成立，就说明这一页需要重做。'
+        };
+        const lockNote = document.getElementById('lock-note');
+        document.querySelectorAll('.lock-tab').forEach(function (tab) {
+          tab.addEventListener('click', function () {
+            document.querySelectorAll('.lock-tab').forEach(function (item) { item.classList.remove('is-active'); item.setAttribute('aria-selected', 'false'); });
+            tab.classList.add('is-active'); tab.setAttribute('aria-selected', 'true'); lockNote.innerHTML = lockNotes[tab.dataset.lock];
+          });
+        });
+
+        document.querySelectorAll('.archetype').forEach(function (card) {
+          card.addEventListener('click', function () {
+            const isOpen = card.classList.toggle('is-open');
+            card.querySelector('.open-mark').textContent = isOpen ? '−' : '+';
+          });
+        });
+        document.querySelectorAll('.qa-item').forEach(function (item) {
+          item.addEventListener('click', function () {
+            const next = item.getAttribute('aria-pressed') !== 'true';
+            item.setAttribute('aria-pressed', String(next));
+            item.querySelector('.qa-box').textContent = next ? '✓' : '';
+          });
+        });
+      })();
+    </script>
+  </body>
+</html>
