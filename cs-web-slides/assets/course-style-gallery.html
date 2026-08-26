@@ -1,0 +1,490 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>CS 网页幻灯片 · 知识课程风格库</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&family=Noto+Sans+SC:wght@400;500;600;700;900&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --ink: #171716;
+        --paper: #f1eee6;
+        --line: rgba(241, 238, 230, 0.2);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        min-width: 320px;
+        margin: 0;
+        color: var(--paper);
+        background: #121210;
+        font-family: "Noto Sans SC", sans-serif;
+      }
+
+      .gallery {
+        width: min(1440px, calc(100% - 48px));
+        padding: 56px 0 72px;
+        margin: 0 auto;
+      }
+
+      .gallery-header {
+        display: flex;
+        gap: 32px;
+        align-items: end;
+        justify-content: space-between;
+        padding-bottom: 28px;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .eyebrow,
+      .card-meta,
+      .slide-kicker,
+      .slide-index {
+        margin: 0;
+        font-family: "DM Mono", monospace;
+        font-size: 11px;
+        font-weight: 500;
+        letter-spacing: 0.11em;
+        text-transform: uppercase;
+      }
+
+      .eyebrow {
+        color: #f47749;
+      }
+
+      h1 {
+        max-width: 760px;
+        margin: 12px 0 0;
+        font-family: "Instrument Serif", serif;
+        font-size: clamp(46px, 6vw, 82px);
+        font-weight: 400;
+        letter-spacing: -0.055em;
+        line-height: 0.9;
+      }
+
+      .gallery-header > p {
+        max-width: 330px;
+        margin: 0;
+        color: #aaa69d;
+        font-size: 15px;
+        line-height: 1.65;
+      }
+
+      .styles {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 36px 24px;
+        padding-top: 34px;
+      }
+
+      .style {
+        min-width: 0;
+      }
+
+      .style-top {
+        display: flex;
+        gap: 16px;
+        align-items: baseline;
+        justify-content: space-between;
+        margin: 0 0 12px;
+      }
+
+      .style h2 {
+        margin: 0;
+        font-size: 19px;
+        font-weight: 600;
+        letter-spacing: -0.035em;
+      }
+
+      .card-meta {
+        color: #8c887f;
+        font-size: 10px;
+      }
+
+      .mini-slide {
+        position: relative;
+        aspect-ratio: 16 / 9;
+        overflow: hidden;
+        cursor: default;
+        box-shadow: 0 16px 34px rgba(0, 0, 0, 0.2);
+        transition:
+          transform 320ms cubic-bezier(0.22, 1, 0.36, 1),
+          box-shadow 320ms cubic-bezier(0.22, 1, 0.36, 1);
+      }
+
+      .mini-slide:hover {
+        box-shadow: 0 26px 52px rgba(0, 0, 0, 0.32);
+        transform: translateY(-6px);
+      }
+
+      .slide-kicker,
+      .slide-index {
+        position: absolute;
+        z-index: 3;
+      }
+
+      .slide-kicker {
+        top: 7%;
+        left: 7%;
+      }
+
+      .slide-index {
+        right: 7%;
+        bottom: 7%;
+      }
+
+      .warm {
+        color: #202019;
+        background:
+          radial-gradient(circle at 77% 24%, #e7b95d 0 4%, transparent 4.3%),
+          radial-gradient(circle at 85% 61%, #99b6a4 0 13%, transparent 13.3%),
+          #f3eee2;
+      }
+
+      .warm::after {
+        position: absolute;
+        right: 10%;
+        bottom: -14%;
+        width: 35%;
+        height: 67%;
+        border: 2px solid #202019;
+        border-radius: 48% 50% 42% 44%;
+        content: "";
+        transform: rotate(-14deg);
+      }
+
+      .warm-title {
+        position: absolute;
+        top: 29%;
+        left: 7%;
+        width: 63%;
+        margin: 0;
+        font-family: "Instrument Serif", serif;
+        font-size: clamp(30px, 3.1vw, 52px);
+        font-weight: 400;
+        letter-spacing: -0.075em;
+        line-height: 0.86;
+      }
+
+      .warm-title em {
+        color: #d74d37;
+      }
+
+      .swiss {
+        color: #10100f;
+        background:
+          linear-gradient(90deg, transparent 49.8%, rgba(16, 16, 15, 0.16) 50%, transparent 50.2%),
+          linear-gradient(0deg, transparent 49.8%, rgba(16, 16, 15, 0.16) 50%, transparent 50.2%),
+          #f4f4ee;
+      }
+
+      .swiss .slide-kicker,
+      .swiss .slide-index {
+        color: #e43922;
+      }
+
+      .swiss-number {
+        position: absolute;
+        top: 19%;
+        left: 7%;
+        color: #e43922;
+        font-size: clamp(54px, 6vw, 94px);
+        font-weight: 900;
+        letter-spacing: -0.1em;
+        line-height: 0.8;
+      }
+
+      .swiss-title {
+        position: absolute;
+        bottom: 18%;
+        left: 7%;
+        width: 76%;
+        margin: 0;
+        font-size: clamp(25px, 2.6vw, 42px);
+        font-weight: 900;
+        letter-spacing: -0.08em;
+        line-height: 0.92;
+      }
+
+      .swiss-bar {
+        position: absolute;
+        right: 7%;
+        bottom: 18%;
+        width: 17%;
+        height: 12px;
+        background: #135ec9;
+      }
+
+      .editorial {
+        color: #f3eee6;
+        background:
+          linear-gradient(90deg, rgba(243, 238, 230, 0.14) 1px, transparent 1px) 0 0 / 20% 100%,
+          #171716;
+      }
+
+      .editorial .slide-kicker,
+      .editorial .slide-index {
+        color: #aaa69d;
+      }
+
+      .editorial-title {
+        position: absolute;
+        top: 27%;
+        left: 9%;
+        width: 77%;
+        margin: 0;
+        font-family: "Instrument Serif", serif;
+        font-size: clamp(31px, 3.4vw, 54px);
+        font-weight: 400;
+        letter-spacing: -0.07em;
+        line-height: 0.89;
+      }
+
+      .editorial-title em {
+        color: #b7b2a8;
+      }
+
+      .editorial-caption {
+        position: absolute;
+        bottom: 17%;
+        left: 9%;
+        max-width: 58%;
+        color: #aaa69d;
+        font-size: 11px;
+        line-height: 1.55;
+      }
+
+      .bio {
+        color: #f9f6f2;
+        background:
+          radial-gradient(circle at 76% 43%, rgba(242, 76, 55, 0.94), transparent 20%),
+          linear-gradient(110deg, #160908, #240d0b 48%, #050505);
+      }
+
+      .bio::before {
+        position: absolute;
+        inset: 0;
+        background-image:
+          linear-gradient(rgba(255, 255, 255, 0.12) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(255, 255, 255, 0.12) 1px, transparent 1px);
+        background-size: 24px 24px;
+        content: "";
+        mask-image: linear-gradient(90deg, black, transparent 75%);
+      }
+
+      .bio-orbit {
+        position: absolute;
+        top: 16%;
+        right: -8%;
+        width: 58%;
+        aspect-ratio: 1;
+        border: 1px solid rgba(255, 255, 255, 0.55);
+        border-radius: 50%;
+      }
+
+      .bio-orbit::before,
+      .bio-orbit::after {
+        position: absolute;
+        border: 1px solid rgba(255, 255, 255, 0.32);
+        border-radius: 50%;
+        content: "";
+      }
+
+      .bio-orbit::before {
+        inset: 12%;
+      }
+
+      .bio-orbit::after {
+        inset: 29%;
+      }
+
+      .bio-title {
+        position: absolute;
+        bottom: 16%;
+        left: 7%;
+        width: 68%;
+        margin: 0;
+        font-size: clamp(24px, 2.55vw, 41px);
+        font-weight: 600;
+        letter-spacing: -0.075em;
+        line-height: 0.96;
+      }
+
+      .bio .slide-kicker,
+      .bio .slide-index {
+        color: #ffb9a8;
+      }
+
+      .pixel {
+        color: #ffffff;
+        background:
+          linear-gradient(90deg, rgba(255, 255, 255, 0.06) 1px, transparent 1px) 0 0 / 8px 8px,
+          #050505;
+      }
+
+      .pixel-title {
+        position: absolute;
+        top: 30%;
+        left: 7%;
+        width: 84%;
+        margin: 0;
+        font-family: "DM Mono", monospace;
+        font-size: clamp(20px, 2.15vw, 34px);
+        font-weight: 500;
+        letter-spacing: -0.095em;
+        line-height: 1.05;
+      }
+
+      .pixel-title span {
+        color: #a4ff52;
+      }
+
+      .pixel-status {
+        position: absolute;
+        right: 7%;
+        bottom: 18%;
+        padding: 6px 8px;
+        color: #050505;
+        background: #a4ff52;
+        font-family: "DM Mono", monospace;
+        font-size: 9px;
+        letter-spacing: 0.05em;
+      }
+
+      .pixel .slide-kicker,
+      .pixel .slide-index {
+        color: #a4ff52;
+      }
+
+      .metal {
+        color: #ffffff;
+        background:
+          linear-gradient(132deg, transparent 0 42%, rgba(255, 255, 255, 0.16) 42.15% 42.4%, transparent 42.6%),
+          radial-gradient(circle at 79% 33%, #424242, transparent 28%),
+          #090909;
+      }
+
+      .metal-panel {
+        position: absolute;
+        right: 7%;
+        bottom: 13%;
+        width: 28%;
+        height: 42%;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.18), rgba(0, 0, 0, 0.45) 56%, rgba(196, 215, 255, 0.16));
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.24);
+      }
+
+      .metal-title {
+        position: absolute;
+        top: 31%;
+        left: 7%;
+        width: 66%;
+        margin: 0;
+        font-size: clamp(23px, 2.45vw, 39px);
+        font-weight: 500;
+        letter-spacing: -0.075em;
+        line-height: 0.98;
+      }
+
+      .metal-title em {
+        color: #bdc7d8;
+        font-family: "Instrument Serif", serif;
+        font-size: 1.13em;
+      }
+
+      .metal .slide-kicker,
+      .metal .slide-index {
+        color: #b8bcc3;
+      }
+
+      @media (max-width: 920px) {
+        .gallery {
+          width: min(760px, calc(100% - 32px));
+          padding-top: 36px;
+        }
+
+        .gallery-header {
+          display: block;
+        }
+
+        .gallery-header > p {
+          margin-top: 18px;
+        }
+
+        .styles {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+      }
+
+      @media (max-width: 560px) {
+        .gallery {
+          width: min(420px, calc(100% - 24px));
+        }
+
+        .styles {
+          grid-template-columns: 1fr;
+          gap: 28px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="gallery">
+      <header class="gallery-header">
+        <div>
+          <p class="eyebrow">CS Web Slides / Knowledge courses</p>
+          <h1>六种课程视觉语言，<br />不是六种换色模板。</h1>
+        </div>
+        <p>每个方向都要能讲完“概念、关系、步骤、练习与结论”，再谈封面是否足够酷。</p>
+      </header>
+
+      <section class="styles" aria-label="知识课程风格库">
+        <article class="style">
+          <div class="style-top"><h2>Warm Intelligence</h2><p class="card-meta">入门 / 方法论</p></div>
+          <div class="mini-slide warm">
+            <p class="slide-kicker">第一课 / 01</p><p class="warm-title">把复杂问题，讲成<em>看得见</em>的关系。</p><p class="slide-index">WARM</p>
+          </div>
+        </article>
+        <article class="style">
+          <div class="style-top"><h2>Swiss Signal</h2><p class="card-meta">框架 / 案例</p></div>
+          <div class="mini-slide swiss">
+            <p class="slide-kicker">课程结构 / 02</p><p class="swiss-number">01</p><p class="swiss-title">先建立框架，再进入细节。</p><span class="swiss-bar"></span><p class="slide-index">GRID</p>
+          </div>
+        </article>
+        <article class="style">
+          <div class="style-top"><h2>Editorial Noir</h2><p class="card-meta">观点 / 叙事</p></div>
+          <div class="mini-slide editorial">
+            <p class="slide-kicker">一个转折</p><p class="editorial-title">真正的问题，不是更努力，<br />而是<em>换一个判断</em>。</p><p class="editorial-caption">观点、证据、反思，再带走一句新的结论。</p><p class="slide-index">ESSAY</p>
+          </div>
+        </article>
+        <article class="style">
+          <div class="style-top"><h2>Bio-Techno Reveal</h2><p class="card-meta">AI / 趋势</p></div>
+          <div class="mini-slide bio">
+            <p class="slide-kicker">观察未知</p><span class="bio-orbit"></span><p class="bio-title">从一个信号，看到技术变化的全貌。</p><p class="slide-index">SCAN</p>
+          </div>
+        </article>
+        <article class="style">
+          <div class="style-top"><h2>Pixel Signal</h2><p class="card-meta">工具 / 开发者</p></div>
+          <div class="mini-slide pixel">
+            <p class="slide-kicker">System ready</p><p class="pixel-title">让工作流<br /><span>自己开始思考</span>。</p><p class="pixel-status">STATUS / ACTIVE</p><p class="slide-index">PXL</p>
+          </div>
+        </article>
+        <article class="style">
+          <div class="style-top"><h2>Liquid Metal Ops</h2><p class="card-meta">企业 / 管理</p></div>
+          <div class="mini-slide metal">
+            <p class="slide-kicker">Operate with intent</p><p class="metal-title">把战略，变成<br /><em>可执行</em>的系统。</p><span class="metal-panel"></span><p class="slide-index">OPS</p>
+          </div>
+        </article>
+      </section>
+    </main>
+  </body>
+</html>

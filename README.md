@@ -110,6 +110,19 @@ Copy-Item -Recurse .\cs-web-slides "$env:USERPROFILE\.codex\skills\cs-web-slides
 
 ### 网页幻灯片与 PPTX 网页化
 
+知识课程可直接这样调用：
+
+~~~text
+Use $cs-web-slides 把下面课程做成 12 页知识型网页幻灯片。
+受众是刚入门的中文学习者；先给我 Warm Intelligence、Swiss Signal、Editorial Noir 三个真实封面方向，再按我选择的方向完成整套 deck。
+
+<粘贴课程素材>
+~~~
+
+内置课程风格库：Warm Intelligence、Swiss Signal、Editorial Noir、Bio-Techno Reveal、Pixel Signal 与 Liquid Metal Ops。可先打开 `cs-web-slides/assets/course-style-gallery.html` 查看方向。
+
+通用网页演示也可这样调用：
+
 ~~~text
 Use $cs-web-slides 将下面内容制作成精美、可交互的网页幻灯片。
 用于一场产品发布，面向潜在客户，偏低密度演讲节奏；保留 logo 与产品截图。
@@ -228,8 +241,12 @@ Use $cs-xiaohuang-skill 基于小黄身份参考图，生成一张保持暖黄�
 └── cs-web-slides/                   # 安装此目录
     ├── SKILL.md
     ├── agents/openai.yaml
-    ├── assets/web-slide-starter.html
+    ├── assets/
+    │   ├── web-slide-starter.html
+    │   └── course-style-gallery.html
     ├── references/
+    │   ├── style-index.md
+    │   └── styles/
     └── scripts/extract-pptx.ps1
 ```
 

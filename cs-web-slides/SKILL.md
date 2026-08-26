@@ -24,6 +24,7 @@ metadata:
 按任务读取最少的参考资料：
 
 - 新建、补强或改版网页 deck：读取 [references/design-discovery.md](references/design-discovery.md) 和 [references/implementation.md](references/implementation.md)，并以 [assets/web-slide-starter.html](assets/web-slide-starter.html) 为功能底座。
+- 知识课程、方法论或教学型 deck：先读取 [references/style-index.md](references/style-index.md)，再只读取入选的风格说明。默认预览池为 Warm Intelligence、Swiss Signal、Editorial Noir。
 - 转换 PPTX：先运行 [scripts/extract-pptx.ps1](scripts/extract-pptx.ps1)，再读取 [references/pptx-conversion.md](references/pptx-conversion.md)。
 - 最终检查与交付：读取 [references/quality-checklist.md](references/quality-checklist.md)。
 
@@ -43,7 +44,7 @@ metadata:
 
 先理解用户的审美线索：喜欢与讨厌的作品、品牌、色彩、字体、气质、场地和受众反应。不要把“选设计风格”变成抽象问卷。
 
-默认做 3 个真实首屏预览，保存到工作目录的 `.cs-web-slides/style-previews/`：
+默认做 3 个真实首屏预览，保存到工作目录的 `.cs-web-slides/style-previews/`。知识课程从风格索引的默认预览池中选取；若主题、受众或品牌需要，可替换其中一个方向：
 
 - 一条稳妥、可读的方向；
 - 一条更具记忆点的方向；
@@ -52,6 +53,8 @@ metadata:
 三个预览必须都是该演示真实的封面页，包含用户主题或品牌，不能在画面中出现“方案 A”“预览”“模板”等内部标签。打开或展示预览供用户选择；若用户已经指定了清晰风格，可将其作为一个方向，但仍保留有意义的对比。
 
 用户选择后，保持所选方向的字体、网格、调色、装饰语言与运动节奏贯穿全套，不要在中途退回通用卡片式设计。
+
+一套 deck 只能有一个主风格。用户要求混搭时，只允许借用另一个风格的一项明确元素（例如字体、数据图形或动效），并在动工前说明主从关系。
 
 ### 3. 建立叙事，再生成页面
 
