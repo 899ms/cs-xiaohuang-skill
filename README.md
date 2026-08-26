@@ -41,7 +41,7 @@
 
 整套 PPT 使用暖白背景、自然轻微抖动的黑色手绘线、克制的红橙/蓝色状态标记和大量留白。小黄必须完成画面中关键的解释动作，不能只是角落装饰。
 
-![小黄角色参考](xiaohuang-ppt/assets/reference-xiaohuang.png)
+![小黄角色参考](cs-xiaohuang-ppt/assets/reference-xiaohuang.png)
 
 ## 示例效果
 
@@ -53,17 +53,17 @@
 
 ## 安装
 
-下载或克隆本仓库后，进入仓库根目录，只把 `xiaohuang-ppt/` 安装到 Codex skills 目录：
+下载或克隆本仓库后，进入仓库根目录，只把 `cs-xiaohuang-ppt/` 安装到 Codex skills 目录：
 
 ```bash
 mkdir -p "${CODEX_HOME:-$HOME/.codex}/skills"
-cp -R ./xiaohuang-ppt "${CODEX_HOME:-$HOME/.codex}/skills/"
+cp -R ./cs-xiaohuang-ppt "${CODEX_HOME:-$HOME/.codex}/skills/"
 ```
 
 Windows PowerShell：
 
 ```powershell
-Copy-Item -Recurse .\xiaohuang-ppt "$env:USERPROFILE\.codex\skills\xiaohuang-ppt"
+Copy-Item -Recurse .\cs-xiaohuang-ppt "$env:USERPROFILE\.codex\skills\cs-xiaohuang-ppt"
 ```
 
 ## 怎么用
@@ -71,7 +71,7 @@ Copy-Item -Recurse .\xiaohuang-ppt "$env:USERPROFILE\.codex\skills\xiaohuang-ppt
 ### 文章变成一套小黄课件图
 
 ```text
-Use $xiaohuang-ppt 把下面文章做成 10 页小黄轻手绘 PPT-style 页面图。
+Use $cs-xiaohuang-ppt 把下面文章做成 10 页小黄轻手绘 PPT-style 页面图。
 面向刚接触这个主题的中文读者；先给 slide blueprint，再逐页生成 16:9 PNG 和 contact sheet。
 小黄必须承担解释关键关系的动作，文字保持短。
 
@@ -81,7 +81,7 @@ Use $xiaohuang-ppt 把下面文章做成 10 页小黄轻手绘 PPT-style 页面�
 ### 产品或工作流说明
 
 ```text
-Use $xiaohuang-ppt 将这个产品工作流做成 8 页小黄 PPT 图。
+Use $cs-xiaohuang-ppt 将这个产品工作流做成 8 页小黄 PPT 图。
 目标是让潜在用户理解：旧方法卡在哪里、系统如何处理、最终获得什么。
 先规划叙事；不要做可编辑 PPTX，不要使用卡片墙或正式流程图。
 
@@ -91,7 +91,7 @@ Use $xiaohuang-ppt 将这个产品工作流做成 8 页小黄 PPT 图。
 ### 只要规划，不生成图片
 
 ```text
-Use $xiaohuang-ppt 先不要生图。
+Use $cs-xiaohuang-ppt 先不要生图。
 把下面内容规划为一套 6 页左右的小黄 PPT-style deck。
 逐页给出标题、主旨、archetype、小黄动作、可见中文和图像 brief。
 
@@ -120,7 +120,7 @@ Use $xiaohuang-ppt 先不要生图。
 ├── examples/
 │   ├── images/
 │   └── prompts.md
-└── xiaohuang-ppt/                  # 安装此目录
+└── cs-xiaohuang-ppt/               # 安装此目录
     ├── SKILL.md
     ├── agents/openai.yaml
     ├── assets/

@@ -1,5 +1,5 @@
 ---
-name: xiaohuang-ppt
+name: cs-xiaohuang-ppt
 description: "将中文文章、课程笔记、演讲提纲、产品说明、工作流或粗略想法，转成以小黄（有温度）为叙事主角的中文轻手绘 PPT-style 整页图像 deck。用户提到小黄 PPT、小黄课件、小黄演示稿、小黄幻灯片，或希望把内容做成统一风格的 PNG 页面图时使用。默认输出 16:9 PNG 页面、contact sheet 与 slide blueprint；不输出可编辑 PPTX。"
 metadata:
   author: "陈硕"
