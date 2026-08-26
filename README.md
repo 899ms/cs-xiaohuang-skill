@@ -1,21 +1,46 @@
-# 小黄 PPT 与文章配图
+# CS 小黄 PPT 与文章配图
 
-> 把文章、课程笔记、产品说明或一个想法，做成由小黄解释的中文轻手绘 PPT-style 页面图，或文章封面与正文配图。
+> 用同一个小黄，把文章、课程笔记、产品说明或一个想法，变成可直接发布的中文轻手绘图片。
 >
-> 16:9 标准页面 / 正文图｜21:9 封面｜PNG 输出｜统一小黄身份｜适合知识内容、教学、产品讲解与文章写作
+> PPT-style deck｜文章封面与正文配图｜PNG 输出｜统一角色身份｜先规划，后生图
 
 ## 这是什么
 
-小黄 PPT 是一个 Codex Skill。它会先理解内容：做演示时建立叙事和逐页 blueprint；做文章时识别认知锚点并输出 shot list。之后将页面或配图逐张生成可直接交付的 PNG。
+`cs-xiaohuang-ppt` 是一个 Codex Skill。它会先理解内容：做演示时建立叙事和逐页 blueprint；做文章时识别认知锚点并输出 shot list。之后将页面或配图逐张生成可直接交付的 PNG。
 
 它不是传统 PPT 模板，也不是可编辑 PPTX 生成器。它的核心是让固定品牌角色“小黄”通过筛选、连接、修复、点亮、搬运等动作，解释内容中最关键的判断、关系与转折。
 
-工作顺序是：
+## 两种输出模式
+
+| 模式 | 适合场景 | 默认交付 |
+| --- | --- | --- |
+| 小黄 PPT | 课程、分享、产品说明、工作流、方法论 | 5–12 张 16:9 PNG 页面 + slide blueprint + contact sheet |
+| 文章配图 | 公众号、博客、Newsletter、Notion、知识型长文 | 1 张 21:9 封面 + 3–6 张 16:9 正文图 + shot list + contact sheet |
+
+两种模式都遵守同一条原则：**一张图只解释一个关系，小黄必须完成关键动作，不能只在角落卖萌。**
+
+## 它如何工作
+
+```text
+原始素材
+   ↓
+内容 intake：主题、受众、目标、核心判断
+   ↓
+Deck：叙事与逐页 blueprint     文章：认知锚点与 shot list
+   ↓                                      ↓
+语义构图：对比 / 转化 / 筛选 / 阻塞 / 循环 / 分叉 / 搭建
+   ↓
+锁定小黄身份与整套视觉语言
+   ↓
+逐张生成 PNG → 检查中文、比例、角色与风格 → contact sheet → 交付
+```
+
+具体过程是：
 
 1. 从素材中提炼必须让读者理解的主线。
 2. 为每一页选择合适的语义版式，而不是重复套版。
-3. 锁定暖白底、黑色轻手绘线条、小黄 DNA、标题与页码位置。
-4. 逐页生成完整 PNG，并用 contact sheet 检查整套一致性。
+3. 锁定暖白底、黑色轻手绘线条、小黄 DNA 与跨页留白；deck 额外锁定标题与页码位置。
+4. 逐张生成完整 PNG，并用 contact sheet 检查整套一致性。
 
 ## 适合谁用
 
@@ -29,8 +54,8 @@
 
 ## 默认产出
 
-- 16:9 PNG 标准页面（推荐 1920×1080）
-- 文章模式默认的 1 张 21:9 封面（推荐 2520×1080）与 3–6 张 16:9 正文图
+- 小黄 PPT：5–12 张 16:9 PNG 标准页面（推荐 1920×1080）
+- 文章配图：1 张 21:9 封面（推荐 2520×1080）与 3–6 张 16:9 正文图
 - 多页 contact sheet
 - deck 的简短 slide-by-slide blueprint，或文章的 shot list
 
@@ -57,6 +82,8 @@
 下载或克隆本仓库后，进入仓库根目录，只把 `cs-xiaohuang-ppt/` 安装到 Codex skills 目录：
 
 ```bash
+git clone https://github.com/ChenShuo2004/cs-xiaohuang-ppt.git
+cd cs-xiaohuang-ppt
 mkdir -p "${CODEX_HOME:-$HOME/.codex}/skills"
 cp -R ./cs-xiaohuang-ppt "${CODEX_HOME:-$HOME/.codex}/skills/"
 ```
@@ -64,6 +91,8 @@ cp -R ./cs-xiaohuang-ppt "${CODEX_HOME:-$HOME/.codex}/skills/"
 Windows PowerShell：
 
 ```powershell
+git clone https://github.com/ChenShuo2004/cs-xiaohuang-ppt.git
+Set-Location .\cs-xiaohuang-ppt
 Copy-Item -Recurse .\cs-xiaohuang-ppt "$env:USERPROFILE\.codex\skills\cs-xiaohuang-ppt"
 ```
 
@@ -78,6 +107,8 @@ Use $cs-xiaohuang-ppt 把下面文章做成 10 页小黄轻手绘 PPT-style 页�
 
 <粘贴文章>
 ```
+
+适合的文章结构包括：一个反常识判断、前后变化、输入与转化、流程中的卡点、反馈回路、分叉选择或一条值得带走的结论。
 
 ### 文章封面与正文配图
 
@@ -120,6 +151,16 @@ Use $cs-xiaohuang-ppt 先不要生图。
 5. 为每页 / 每张图输出精准的图像 brief 和 `Required text only`。
 6. 逐张生成并校验：中文、比例、身份、构图和风格。
 7. 生成 contact sheet，修复不一致页面或配图后交付。
+
+## 输出边界
+
+这个 skill 输出的是完整 PNG 页面图，并不输出：
+
+- 可编辑 PPTX、图片型 PPTX 或 PDF。
+- 复杂系统架构图、数据仪表盘、密集表格或正式流程图。
+- 长段正文、逐字讲稿、代码块、真实 UI 或复杂动效。
+
+若需要可编辑演示文稿，请使用专门的 Presentation / PowerPoint 工作流；若需要小黄品牌资产、表情、三视图或 3D 延展，请使用 [`$cs-xiaohuang-skill`](https://github.com/ChenShuo2004/cs-skills)。
 
 ## 目录结构
 
