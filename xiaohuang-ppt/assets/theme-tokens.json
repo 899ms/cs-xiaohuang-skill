@@ -1,0 +1,42 @@
+{
+  "name": "xiaohuang-ppt-v1",
+  "language": "zh-CN",
+  "canvas": {
+    "presentation_ratio": "16:9",
+    "presentation_recommended_px": "1920x1080",
+    "cover_ratio": "21:9",
+    "cover_recommended_px": "2520x1080",
+    "output": "complete raster PNG page image",
+    "subject_occupancy": "40-60% canvas area with at least one third quiet negative space"
+  },
+  "colors": {
+    "paper": "#FFF9EF",
+    "ink": "#151515",
+    "xiaohuang": "#F6B72A",
+    "xiaohuang_highlight": "#FFD86A",
+    "xiaohuang_shadow": "#E99A1B",
+    "heart_orange": "#F59A23",
+    "warning_or_result": "#E25A42",
+    "feedback_or_state": "#5D9ED8"
+  },
+  "master_layout": {
+    "background": "clean warm white, no texture, gradient, shadow, or frame",
+    "page_number": "small upper-left, e.g. 03 / 10",
+    "title": "short centered handwritten Chinese title, restrained and optically equal on body pages",
+    "underline": "one thin warm-orange or blue hand-drawn underline",
+    "spacing": "wide margins and a calm central action",
+    "variation_policy": "fixed page shell; vary only the semantic action and metaphor"
+  },
+  "text_budget": {
+    "title": "5-12 Chinese characters preferred",
+    "subtitle": "optional, 3-12 Chinese characters",
+    "labels": "2-5 preferred; never more than 6",
+    "label_length": "2-6 Chinese characters each"
+  },
+  "delivery": {
+    "default": "PNG page images plus contact sheet and blueprint summary",
+    "out_of_scope": "editable PPTX, image-based PPTX, PDF export, formal architecture diagrams, and dashboard-style slides",
+    "text_fidelity": "reduce labels and regenerate first; use deterministic text overlay only after the visual direction is accepted"
+  },
+  "style_anchor": "assets/reference-xiaohuang.png"
+}

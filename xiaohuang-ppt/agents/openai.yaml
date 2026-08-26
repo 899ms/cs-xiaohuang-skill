@@ -1,0 +1,4 @@
+interface:
+  display_name: "小黄 PPT"
+  short_description: "把内容变成小黄轻手绘 PPT-style PNG 页面图。"
+  default_prompt: "使用 $xiaohuang-ppt，把下面内容做成一套小黄轻手绘 PPT-style 页面图；先给我 slide blueprint，再按统一风格逐页生成 16:9 PNG，并输出 contact sheet。"
