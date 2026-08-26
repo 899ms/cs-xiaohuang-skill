@@ -40,6 +40,30 @@ extra labels, full paragraphs, formal flowchart, dense cards, shadow, gradient, 
 
 用户明确需要文章 / 活动封面时，改为 21:9（推荐 2520×1080），省略页码，标题可略大但克制。保留同一暖白、线条、角色身份和一个主隐喻；不把它做成商业海报。
 
+## 文章正文图模板
+
+使用时读取 `article-illustrations.md`。文章正文图不是 PPT 缩略页：默认不使用页码、顶部标题和 deck 下划线，只留下读者需要的少量手写标注。
+
+```text
+Create one standalone Chinese article body illustration, final raster image.
+Canvas: 16:9, preferred final size 1920x1080 if supported.
+Article section: <the paragraph or anchor this image supports>
+Core idea: <one relation the reader must understand>
+Structure: <before-after | input-transform | bottleneck-feedback | layered build | route-choice | state comic>
+
+Apply this article style lock:
+Clean warm-white background (#FFF9EF), no paper texture, gradient, shadow, full-page frame, page number, or slide title.
+Minimalist black hand-drawn pen lines with slight natural wobble, abundant negative space, and a small warm-yellow character 小黄 as the key operator.
+小黄 identity is fixed: asymmetric soft warm-yellow seed body, curved antenna ending in a hollow orange heart, black vertical oval eyes, tiny smile, peach cheeks, and thin black stick limbs. Never a pear, egg, raindrop, animal, generic mascot, or 3D toy.
+Yellow is only for 小黄. Red-orange only marks warning/result; blue only marks feedback/system state. One core action only; no more than six short handwritten Chinese labels. No deck cards, formal flowchart, fake English, URL, watermark, or extra text.
+
+Composition:
+<describe Xiaohuang's action, one or two concrete low-tech props, their relationship, and the resulting state. Keep the subject 40-60% of the canvas and leave at least one third blank.>
+
+Required text only:
+<list every visible Chinese label exactly; short labels only>
+```
+
 ## 中文文字修复
 
 只有页面的构图与角色身份已通过、但中文仍错时使用：重新生成或复用接受的视觉，并为每个准确标签预留干净空白区域；不生成占位文字。然后只叠加 `Required text only` 中的文字，并重新检查是否出现重复、错字或额外伪文字。

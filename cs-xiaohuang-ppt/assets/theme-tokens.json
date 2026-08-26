@@ -35,6 +35,7 @@
   },
   "delivery": {
     "default": "PNG page images plus contact sheet and blueprint summary",
+    "article": "one optional 21:9 cover plus 3-6 16:9 body illustrations, contact sheet, and shot list",
     "out_of_scope": "editable PPTX, image-based PPTX, PDF export, formal architecture diagrams, and dashboard-style slides",
     "text_fidelity": "reduce labels and regenerate first; use deterministic text overlay only after the visual direction is accepted"
   },
