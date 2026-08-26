@@ -1,8 +1,13 @@
-# CS 小黄 IP、PPT 与文章配图
+# CS 小黄 IP、PPT 配图与网页幻灯片
 
-> 用同一个小黄，把文章、课程笔记、产品说明或一个想法，变成可直接发布的中文轻手绘图片。
+> 用同一个小黄，把文章、课程笔记、产品说明或一个想法，变成可直接发布的中文轻手绘图片；也能把内容或现有 PPTX 做成可交互的网页幻灯片。
 >
-> 品牌 IP 延展｜PPT-style deck｜文章封面与正文配图｜PNG 输出｜统一角色身份｜先规划，后生图
+> 本仓库提供两项独立的 Codex skills：
+>
+> | Skill | 用途 | 默认交付 |
+> | --- | --- | --- |
+> | `cs-xiaohuang-skill` | 小黄品牌 IP、轻手绘 PPT-style 图与文章配图 | PNG 图片、blueprint、contact sheet |
+> | `cs-web-slides` | 高品质网页幻灯片与 PPTX 网页化 | HTML 演示目录、原始图片资产 |
 
 ## 这是什么
 
@@ -82,13 +87,14 @@ Deck：叙事与逐页 blueprint     文章：认知锚点与 shot list     IP�
 
 ## 安装
 
-下载或克隆本仓库后，进入仓库根目录，只把 `cs-xiaohuang-skill/` 安装到 Codex skills 目录：
+下载或克隆本仓库后，进入仓库根目录，将需要的 skill 安装到 Codex skills 目录：
 
 ```bash
 git clone https://github.com/ChenShuo2004/cs-xiaohuang-skill.git
 cd cs-xiaohuang-skill
 mkdir -p "${CODEX_HOME:-$HOME/.codex}/skills"
 cp -R ./cs-xiaohuang-skill "${CODEX_HOME:-$HOME/.codex}/skills/"
+cp -R ./cs-web-slides "${CODEX_HOME:-$HOME/.codex}/skills/"
 ```
 
 Windows PowerShell：
@@ -97,9 +103,29 @@ Windows PowerShell：
 git clone https://github.com/ChenShuo2004/cs-xiaohuang-skill.git
 Set-Location .\cs-xiaohuang-skill
 Copy-Item -Recurse .\cs-xiaohuang-skill "$env:USERPROFILE\.codex\skills\cs-xiaohuang-skill"
+Copy-Item -Recurse .\cs-web-slides "$env:USERPROFILE\.codex\skills\cs-web-slides"
 ```
 
 ## 怎么用
+
+### 网页幻灯片与 PPTX 网页化
+
+~~~text
+Use $cs-web-slides 将下面内容制作成精美、可交互的网页幻灯片。
+用于一场产品发布，面向潜在客户，偏低密度演讲节奏；保留 logo 与产品截图。
+先生成三个真实封面视觉方向供我选择，确认后再完成整套 HTML 演示。
+
+<粘贴内容>
+~~~
+
+已有 PPTX 时：
+
+~~~text
+Use $cs-web-slides 把附件 PPTX 转换为网页演示。
+保留原始图片、产品截图和品牌素材；先提取并确认逐页内容，再给我三个视觉方向。
+~~~
+
+它输出的是固定 16:9 舞台的 HTML，支持键盘、触控、悬停交互、动画与浏览器内文本编辑。需要静态图片型小黄课件时，继续使用下面的小黄工作流。
 
 ### 文章变成一套小黄课件图
 
@@ -182,7 +208,7 @@ Use $cs-xiaohuang-skill 基于小黄身份参考图，生成一张保持暖黄�
 ├── examples/
 │   ├── images/
 │   └── prompts.md
-└── cs-xiaohuang-skill/             # 安装此目录
+├── cs-xiaohuang-skill/             # 安装此目录
     ├── SKILL.md
     ├── agents/openai.yaml
     ├── assets/
@@ -199,6 +225,12 @@ Use $cs-xiaohuang-skill 基于小黄身份参考图，生成一张保持暖黄�
         ├── prompt-patterns.md
         ├── slide-archetypes.md
         └── visual-dna.md
+└── cs-web-slides/                   # 安装此目录
+    ├── SKILL.md
+    ├── agents/openai.yaml
+    ├── assets/web-slide-starter.html
+    ├── references/
+    └── scripts/extract-pptx.ps1
 ```
 
 ## 注意事项

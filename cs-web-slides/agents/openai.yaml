@@ -1,0 +1,4 @@
+interface:
+  display_name: "CS 网页幻灯片"
+  short_description: "制作可交互网页幻灯片，或将 PPTX 转为网页演示。"
+  default_prompt: "使用 $cs-web-slides 将以下内容制作成精美、可交互的网页幻灯片；先展示三个视觉方向供我选择。"

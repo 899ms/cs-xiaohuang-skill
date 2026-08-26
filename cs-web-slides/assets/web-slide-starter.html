@@ -1,0 +1,677 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="dark" />
+    <title>网页幻灯片起始模板</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&family=Noto+Sans+SC:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /* === THEME TOKENS === */
+      :root {
+        --stage-scale: 1;
+        --bg: #11110f;
+        --paper: #f4efe5;
+        --ink: #1a1a17;
+        --muted: #b6b2a9;
+        --accent: #f16d3c;
+        --accent-soft: #ffc4a9;
+        --line: rgba(244, 239, 229, 0.16);
+        --ease: cubic-bezier(0.22, 1, 0.36, 1);
+        --duration: 720ms;
+      }
+
+      /* === VIEWPORT AND FIXED STAGE === */
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        overflow: hidden;
+        background: var(--bg);
+      }
+
+      body {
+        color: var(--paper);
+        font-family: "Noto Sans SC", sans-serif;
+      }
+
+      button {
+        font: inherit;
+      }
+
+      .deck-shell {
+        position: fixed;
+        inset: 0;
+        overflow: hidden;
+      }
+
+      .deck-stage {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 1920px;
+        height: 1080px;
+        overflow: hidden;
+        background: var(--bg);
+        transform: translate(-50%, -50%) scale(var(--stage-scale));
+        transform-origin: center;
+        outline: none;
+      }
+
+      .deck-stage:focus-visible {
+        box-shadow: 0 0 0 3px var(--accent-soft);
+      }
+
+      /* === SLIDE VISIBILITY === */
+      .slide {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        overflow: hidden;
+        isolation: isolate;
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+        transition:
+          opacity 420ms var(--ease),
+          visibility 0s linear 420ms;
+      }
+
+      .slide.active {
+        z-index: 1;
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+        transition-delay: 0s;
+      }
+
+      .slide::before {
+        position: absolute;
+        inset: 0;
+        z-index: -3;
+        background:
+          linear-gradient(90deg, transparent 0 49.93%, var(--line) 49.94% 50.06%, transparent 50.07%),
+          linear-gradient(0deg, transparent 0 49.93%, var(--line) 49.94% 50.06%, transparent 50.07%);
+        content: "";
+        opacity: 0.5;
+      }
+
+      /* === SHARED TYPOGRAPHY AND MOTION === */
+      .eyebrow,
+      .page-number,
+      .slide-label {
+        margin: 0;
+        font-family: "DM Mono", monospace;
+        font-size: 18px;
+        font-weight: 500;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+
+      .eyebrow {
+        color: var(--accent-soft);
+      }
+
+      .display {
+        margin: 0;
+        font-family: "Instrument Serif", serif;
+        font-size: 150px;
+        font-weight: 400;
+        letter-spacing: -0.062em;
+        line-height: 0.83;
+      }
+
+      .display em {
+        color: var(--accent);
+        font-style: italic;
+      }
+
+      .body-copy {
+        margin: 0;
+        color: var(--muted);
+        font-size: 30px;
+        line-height: 1.5;
+      }
+
+      .page-number {
+        position: absolute;
+        right: 70px;
+        bottom: 56px;
+        color: var(--muted);
+      }
+
+      .reveal {
+        animation: reveal-up var(--duration) var(--ease) both;
+        animation-delay: var(--delay, 0ms);
+      }
+
+      @keyframes reveal-up {
+        from {
+          opacity: 0;
+          transform: translateY(28px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .hover-lift {
+        transition:
+          transform 280ms var(--ease),
+          box-shadow 280ms var(--ease);
+      }
+
+      .hover-lift:hover {
+        box-shadow: 0 30px 70px rgba(0, 0, 0, 0.28);
+        transform: translateY(-10px) rotate(-0.5deg);
+      }
+
+      /* === CURSOR ATMOSPHERE === */
+      .cursor-halo {
+        position: absolute;
+        top: var(--cursor-y, 50%);
+        left: var(--cursor-x, 50%);
+        z-index: 4;
+        width: 440px;
+        height: 440px;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(241, 109, 60, 0.12), transparent 66%);
+        pointer-events: none;
+        transform: translate(-50%, -50%);
+        transition: opacity 180ms ease;
+      }
+
+      /* === SLIDE 1: COVER EXAMPLE === */
+      .cover {
+        flex-direction: column;
+        justify-content: space-between;
+        padding: 76px 82px 72px;
+        background:
+          radial-gradient(circle at 78% 38%, rgba(241, 109, 60, 0.35), transparent 22%),
+          linear-gradient(135deg, #181815 0%, #10100f 58%, #24201c 100%);
+      }
+
+      .cover-top,
+      .cover-bottom {
+        display: flex;
+        justify-content: space-between;
+      }
+
+      .cover-title {
+        width: 1190px;
+        margin-left: 110px;
+      }
+
+      .cover-title .display {
+        font-size: 184px;
+      }
+
+      .cover-orbit {
+        position: absolute;
+        top: 160px;
+        right: 142px;
+        width: 440px;
+        height: 440px;
+        border: 1px solid rgba(244, 239, 229, 0.24);
+        border-radius: 50%;
+      }
+
+      .cover-orbit::before,
+      .cover-orbit::after {
+        position: absolute;
+        border-radius: 50%;
+        content: "";
+      }
+
+      .cover-orbit::before {
+        top: 60px;
+        left: 34px;
+        width: 102px;
+        height: 102px;
+        background: var(--accent);
+      }
+
+      .cover-orbit::after {
+        right: 34px;
+        bottom: 42px;
+        width: 40px;
+        height: 40px;
+        background: var(--paper);
+      }
+
+      /* === SLIDE 2: CONTENT EXAMPLE === */
+      .statement {
+        align-items: center;
+        padding: 90px 130px;
+        background: var(--paper);
+        color: var(--ink);
+      }
+
+      .statement-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 150px;
+        align-items: end;
+        width: 100%;
+      }
+
+      .statement .eyebrow {
+        color: #9a3920;
+      }
+
+      .statement .body-copy {
+        color: #5e5a53;
+      }
+
+      .statement .display {
+        max-width: 800px;
+        font-size: 140px;
+      }
+
+      .statement-card {
+        padding: 46px;
+        border: 1px solid rgba(26, 26, 23, 0.16);
+        background: #e8dfd0;
+        border-radius: 8px;
+      }
+
+      .statement-card strong {
+        display: block;
+        margin-bottom: 18px;
+        color: var(--accent);
+        font-family: "Instrument Serif", serif;
+        font-size: 88px;
+        font-weight: 400;
+        line-height: 0.85;
+      }
+
+      /* === SLIDE 3: CLOSING EXAMPLE === */
+      .closing {
+        flex-direction: column;
+        justify-content: space-between;
+        padding: 78px 82px 72px;
+        background:
+          linear-gradient(115deg, transparent 0 70%, rgba(241, 109, 60, 0.95) 70.1% 70.45%, transparent 70.55%),
+          #1a1916;
+      }
+
+      .closing .display {
+        width: 940px;
+        font-size: 178px;
+      }
+
+      .closing-link {
+        display: inline-flex;
+        gap: 24px;
+        align-items: center;
+        width: fit-content;
+        padding: 18px 22px;
+        color: var(--ink);
+        background: var(--accent);
+        border-radius: 999px;
+        font-family: "DM Mono", monospace;
+        font-size: 19px;
+        font-weight: 500;
+        letter-spacing: 0.04em;
+        text-decoration: none;
+      }
+
+      /* === VIEWPORT CONTROLS === */
+      .controls {
+        position: fixed;
+        right: 24px;
+        bottom: 22px;
+        z-index: 10;
+        display: flex;
+        gap: 8px;
+        align-items: center;
+      }
+
+      .control-button {
+        display: grid;
+        width: 42px;
+        height: 42px;
+        padding: 0;
+        color: var(--paper);
+        background: rgba(17, 17, 15, 0.72);
+        border: 1px solid rgba(244, 239, 229, 0.25);
+        border-radius: 50%;
+        cursor: pointer;
+        place-items: center;
+        backdrop-filter: blur(12px);
+      }
+
+      .control-button:hover,
+      .control-button:focus-visible {
+        color: var(--ink);
+        background: var(--paper);
+        outline: none;
+      }
+
+      .deck-status {
+        min-width: 64px;
+        color: var(--paper);
+        font-family: "DM Mono", monospace;
+        font-size: 12px;
+        text-align: center;
+      }
+
+      .progress {
+        position: fixed;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 11;
+        height: 3px;
+        background: rgba(244, 239, 229, 0.2);
+      }
+
+      .progress-value {
+        width: var(--progress, 33.333%);
+        height: 100%;
+        background: var(--accent);
+        transition: width 380ms var(--ease);
+      }
+
+      /* === EDIT MODE === */
+      .deck-stage.is-editing {
+        cursor: text;
+      }
+
+      .deck-stage.is-editing [data-editable] {
+        position: relative;
+        outline: 2px dashed rgba(241, 109, 60, 0.78);
+        outline-offset: 10px;
+        cursor: text;
+      }
+
+      .deck-stage.is-editing [data-editable]:focus {
+        outline-color: var(--paper);
+      }
+
+      .edit-active {
+        color: var(--ink);
+        background: var(--accent);
+        border-color: var(--accent);
+      }
+
+      .sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+      }
+
+      @media (pointer: coarse) {
+        .cursor-halo {
+          display: none;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          scroll-behavior: auto !important;
+          animation-duration: 0.01ms !important;
+          animation-iteration-count: 1 !important;
+          transition-duration: 0.01ms !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="deck-shell" aria-label="网页幻灯片">
+      <div class="deck-stage" id="deck-stage" tabindex="0">
+        <div class="cursor-halo" aria-hidden="true"></div>
+
+        <section class="slide cover active" data-title="封面">
+          <div class="cover-top">
+            <p class="eyebrow reveal" data-editable style="--delay: 80ms">Web slide system / 2026</p>
+            <p class="slide-label reveal" data-editable style="--delay: 160ms">01 — Start</p>
+          </div>
+          <div class="cover-orbit reveal" style="--delay: 300ms" aria-hidden="true"></div>
+          <div class="cover-title">
+            <h1 class="display reveal" data-editable style="--delay: 220ms">
+              把观点变成<br /><em>值得停留</em>的画面
+            </h1>
+          </div>
+          <div class="cover-bottom reveal" style="--delay: 440ms">
+            <p class="body-copy" data-editable>替换这个示例，开始你的叙事。</p>
+            <p class="slide-label" data-editable>按 → 或点击右侧继续</p>
+          </div>
+          <p class="page-number">01</p>
+        </section>
+
+        <section class="slide statement" data-title="观点">
+          <div class="statement-grid">
+            <div>
+              <p class="eyebrow reveal" data-editable style="--delay: 80ms">The principle</p>
+              <h2 class="display reveal" data-editable style="--delay: 180ms">
+                一页，只让<br />观众记住<em>一件事</em>。
+              </h2>
+            </div>
+            <div class="statement-card hover-lift reveal" style="--delay: 320ms">
+              <strong data-editable>01</strong>
+              <p class="body-copy" data-editable>
+                保留一条清晰的信息主线，再用构图、层级和运动引导视线。
+              </p>
+            </div>
+          </div>
+          <p class="page-number">02</p>
+        </section>
+
+        <section class="slide closing" data-title="结束">
+          <p class="eyebrow reveal" data-editable style="--delay: 80ms">Ready when you are</p>
+          <h2 class="display reveal" data-editable style="--delay: 190ms">
+            从内容开始，<br />让设计<em>说话</em>。
+          </h2>
+          <a class="closing-link hover-lift reveal" href="#contact" data-editable style="--delay: 330ms">
+            your-site.example <span aria-hidden="true">↗</span>
+          </a>
+          <p class="page-number">03</p>
+        </section>
+      </div>
+
+      <div class="controls" aria-label="演示控制">
+        <button class="control-button" id="previous-button" type="button" aria-label="上一页">←</button>
+        <output class="deck-status" id="deck-status" aria-live="polite">01 / 03</output>
+        <button class="control-button" id="next-button" type="button" aria-label="下一页">→</button>
+        <button class="control-button" id="edit-button" type="button" aria-label="开启编辑模式">E</button>
+        <button class="control-button" id="download-button" type="button" aria-label="下载修改后的演示">↓</button>
+      </div>
+      <div class="progress" aria-hidden="true"><div class="progress-value" id="progress-value"></div></div>
+      <p class="sr-only" id="announcer" aria-live="polite"></p>
+    </main>
+
+    <script>
+      /* === DECK STATE === */
+      const stage = document.getElementById("deck-stage");
+      const slides = Array.from(document.querySelectorAll(".slide"));
+      const previousButton = document.getElementById("previous-button");
+      const nextButton = document.getElementById("next-button");
+      const editButton = document.getElementById("edit-button");
+      const downloadButton = document.getElementById("download-button");
+      const deckStatus = document.getElementById("deck-status");
+      const progressValue = document.getElementById("progress-value");
+      const announcer = document.getElementById("announcer");
+      const state = { index: 0, editing: false, touchStartX: null, touchStartY: null };
+
+      /* === FIXED STAGE SCALING === */
+      function fitStage() {
+        const scale = Math.min(window.innerWidth / 1920, window.innerHeight / 1080);
+        document.documentElement.style.setProperty("--stage-scale", String(scale));
+      }
+
+      /* === SLIDE NAVIGATION === */
+      function replayReveals(slide) {
+        slide.querySelectorAll(".reveal").forEach(function (element) {
+          element.style.animation = "none";
+          void element.offsetWidth;
+          element.style.animation = "";
+        });
+      }
+
+      function showSlide(nextIndex, announce) {
+        const boundedIndex = (nextIndex + slides.length) % slides.length;
+        slides[state.index].classList.remove("active");
+        state.index = boundedIndex;
+        const activeSlide = slides[state.index];
+        activeSlide.classList.add("active");
+        replayReveals(activeSlide);
+
+        const page = String(state.index + 1).padStart(2, "0");
+        const total = String(slides.length).padStart(2, "0");
+        deckStatus.textContent = page + " / " + total;
+        progressValue.style.setProperty("--progress", ((state.index + 1) / slides.length) * 100 + "%");
+        if (announce) {
+          announcer.textContent = "第 " + (state.index + 1) + " 页：" + activeSlide.dataset.title;
+        }
+      }
+
+      function goBy(amount) {
+        if (!state.editing) {
+          showSlide(state.index + amount, true);
+        }
+      }
+
+      /* === EDIT MODE AND DOWNLOAD === */
+      function setEditing(enabled) {
+        state.editing = enabled;
+        stage.classList.toggle("is-editing", enabled);
+        stage.querySelectorAll("[data-editable]").forEach(function (element) {
+          element.contentEditable = String(enabled);
+          element.spellcheck = enabled;
+        });
+        editButton.classList.toggle("edit-active", enabled);
+        editButton.setAttribute("aria-label", enabled ? "退出编辑模式" : "开启编辑模式");
+        announcer.textContent = enabled
+          ? "编辑模式已开启。修改文字后，按下载按钮保存一个新文件。"
+          : "编辑模式已关闭。";
+      }
+
+      function downloadDeck() {
+        const documentCopy = document.documentElement.cloneNode(true);
+        documentCopy.querySelectorAll("[contenteditable]").forEach(function (element) {
+          element.removeAttribute("contenteditable");
+          element.removeAttribute("spellcheck");
+        });
+        documentCopy.querySelector("#deck-stage").classList.remove("is-editing");
+        const html = "<!doctype html>" + String.fromCharCode(10) + documentCopy.outerHTML;
+        const blob = new Blob([html], { type: "text/html;charset=utf-8" });
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = "web-presentation-edited.html";
+        link.click();
+        URL.revokeObjectURL(link.href);
+        announcer.textContent = "已下载修改后的网页演示文件。";
+      }
+
+      /* === INPUTS === */
+      previousButton.addEventListener("click", function () {
+        goBy(-1);
+      });
+
+      nextButton.addEventListener("click", function () {
+        goBy(1);
+      });
+
+      editButton.addEventListener("click", function () {
+        setEditing(!state.editing);
+      });
+
+      downloadButton.addEventListener("click", downloadDeck);
+
+      window.addEventListener("keydown", function (event) {
+        const targetIsEditable = event.target instanceof HTMLElement && event.target.isContentEditable;
+        if (targetIsEditable && event.key !== "Escape") {
+          if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "s") {
+            event.preventDefault();
+            downloadDeck();
+          }
+          return;
+        }
+
+        if (event.key === "ArrowRight" || event.key === "PageDown" || event.key === " ") {
+          event.preventDefault();
+          goBy(1);
+        } else if (event.key === "ArrowLeft" || event.key === "PageUp") {
+          event.preventDefault();
+          goBy(-1);
+        } else if (event.key === "Home") {
+          event.preventDefault();
+          showSlide(0, true);
+        } else if (event.key === "End") {
+          event.preventDefault();
+          showSlide(slides.length - 1, true);
+        } else if (event.key.toLowerCase() === "e") {
+          event.preventDefault();
+          setEditing(!state.editing);
+        } else if (event.key === "Escape" && state.editing) {
+          setEditing(false);
+        }
+      });
+
+      stage.addEventListener("click", function (event) {
+        if (state.editing || event.target.closest("a, button, [data-editable]")) {
+          return;
+        }
+        const bounds = stage.getBoundingClientRect();
+        const relativeX = event.clientX - bounds.left;
+        if (relativeX < bounds.width * 0.25) {
+          goBy(-1);
+        } else if (relativeX > bounds.width * 0.75) {
+          goBy(1);
+        }
+      });
+
+      stage.addEventListener("pointermove", function (event) {
+        const bounds = stage.getBoundingClientRect();
+        const x = ((event.clientX - bounds.left) / bounds.width) * 100;
+        const y = ((event.clientY - bounds.top) / bounds.height) * 100;
+        stage.style.setProperty("--cursor-x", x + "%");
+        stage.style.setProperty("--cursor-y", y + "%");
+      });
+
+      stage.addEventListener("touchstart", function (event) {
+        const touch = event.changedTouches[0];
+        state.touchStartX = touch.clientX;
+        state.touchStartY = touch.clientY;
+      }, { passive: true });
+
+      stage.addEventListener("touchend", function (event) {
+        if (state.editing || state.touchStartX === null) {
+          return;
+        }
+        const touch = event.changedTouches[0];
+        const deltaX = touch.clientX - state.touchStartX;
+        const deltaY = touch.clientY - state.touchStartY;
+        state.touchStartX = null;
+        state.touchStartY = null;
+        if (Math.abs(deltaX) > 50 && Math.abs(deltaX) > Math.abs(deltaY)) {
+          goBy(deltaX < 0 ? 1 : -1);
+        }
+      }, { passive: true });
+
+      window.addEventListener("resize", fitStage);
+      fitStage();
+      showSlide(0, false);
+    </script>
+  </body>
+</html>
