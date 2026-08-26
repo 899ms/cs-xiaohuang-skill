@@ -1,0 +1,4 @@
+interface:
+  display_name: "CS 小黄 IP、PPT 与文章配图"
+  short_description: "延展小黄品牌 IP，或制作小黄 PPT 页面和文章配图。"
+  default_prompt: "使用 $cs-xiaohuang-skill，根据需求延展保持身份一致的小黄品牌 IP，或将内容做成小黄 PPT-style 页面图，或先为文章设计 shot list 再生成封面和正文配图。"

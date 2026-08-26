@@ -1,23 +1,24 @@
-# CS 小黄 PPT 与文章配图
+# CS 小黄 IP、PPT 与文章配图
 
 > 用同一个小黄，把文章、课程笔记、产品说明或一个想法，变成可直接发布的中文轻手绘图片。
 >
-> PPT-style deck｜文章封面与正文配图｜PNG 输出｜统一角色身份｜先规划，后生图
+> 品牌 IP 延展｜PPT-style deck｜文章封面与正文配图｜PNG 输出｜统一角色身份｜先规划，后生图
 
 ## 这是什么
 
-`cs-xiaohuang-ppt` 是一个 Codex Skill。它会先理解内容：做演示时建立叙事和逐页 blueprint；做文章时识别认知锚点并输出 shot list。之后将页面或配图逐张生成可直接交付的 PNG。
+`cs-xiaohuang-skill` 是小黄（有温度）的统一 Codex Skill。它既能生成、编辑和延展小黄品牌 IP，也会先理解内容：做演示时建立叙事和逐页 blueprint；做文章时识别认知锚点并输出 shot list。之后将资产、页面或配图逐张生成可直接交付的图片。
 
 它不是传统 PPT 模板，也不是可编辑 PPTX 生成器。它的核心是让固定品牌角色“小黄”通过筛选、连接、修复、点亮、搬运等动作，解释内容中最关键的判断、关系与转折。
 
-## 两种输出模式
+## 三种输出模式
 
 | 模式 | 适合场景 | 默认交付 |
 | --- | --- | --- |
 | 小黄 PPT | 课程、分享、产品说明、工作流、方法论 | 5–12 张 16:9 PNG 页面 + slide blueprint + contact sheet |
 | 文章配图 | 公众号、博客、Newsletter、Notion、知识型长文 | 1 张 21:9 封面 + 3–6 张 16:9 正文图 + shot list + contact sheet |
+| 品牌 IP 延展 | 标准图、动作表情、三视图、2D / 3D、联名、风格迁移、身份修复 | 保持身份一致的单张或多张品牌资产 |
 
-两种模式都遵守同一条原则：**一张图只解释一个关系，小黄必须完成关键动作，不能只在角落卖萌。**
+所有模式都遵守同一条原则：**可以换动作、场景、媒介和画法；不可以换掉小黄身份。**内容模式中，一张图只解释一个关系，小黄必须完成关键动作，不能只在角落卖萌。
 
 ## 它如何工作
 
@@ -26,7 +27,7 @@
    ↓
 内容 intake：主题、受众、目标、核心判断
    ↓
-Deck：叙事与逐页 blueprint     文章：认知锚点与 shot list
+Deck：叙事与逐页 blueprint     文章：认知锚点与 shot list     IP：身份锚点与变量
    ↓                                      ↓
 语义构图：对比 / 转化 / 筛选 / 阻塞 / 循环 / 分叉 / 搭建
    ↓
@@ -44,6 +45,7 @@ Deck：叙事与逐页 blueprint     文章：认知锚点与 shot list
 
 ## 适合谁用
 
+- 需要稳定生成、修改或延展小黄标准图、动作、表情、三视图、2D / 3D、联名与场景资产的人。
 - 想把文章、公众号、博客、Newsletter 或 Notion 做成小黄封面与正文配图的人。
 - 想把文章、公众号、Notion 或课程提纲变成小黄风格课件的人。
 - 需要一套有固定角色人格的产品介绍、工作流说明或知识内容的人。
@@ -56,6 +58,7 @@ Deck：叙事与逐页 blueprint     文章：认知锚点与 shot list
 
 - 小黄 PPT：5–12 张 16:9 PNG 标准页面（推荐 1920×1080）
 - 文章配图：1 张 21:9 封面（推荐 2520×1080）与 3–6 张 16:9 正文图
+- 品牌 IP：用户指定用途、媒介和尺寸的标准图、动作 / 表情、三视图、2D / 3D 或修复资产
 - 多页 contact sheet
 - deck 的简短 slide-by-slide blueprint，或文章的 shot list
 
@@ -67,7 +70,7 @@ Deck：叙事与逐页 blueprint     文章：认知锚点与 shot list
 
 整套 PPT 使用暖白背景、自然轻微抖动的黑色手绘线、克制的红橙/蓝色状态标记和大量留白。小黄必须完成画面中关键的解释动作，不能只是角落装饰。
 
-![小黄角色参考](cs-xiaohuang-ppt/assets/reference-xiaohuang.png)
+![小黄角色参考](cs-xiaohuang-skill/assets/reference-xiaohuang.png)
 
 ## 示例效果
 
@@ -79,21 +82,21 @@ Deck：叙事与逐页 blueprint     文章：认知锚点与 shot list
 
 ## 安装
 
-下载或克隆本仓库后，进入仓库根目录，只把 `cs-xiaohuang-ppt/` 安装到 Codex skills 目录：
+下载或克隆本仓库后，进入仓库根目录，只把 `cs-xiaohuang-skill/` 安装到 Codex skills 目录：
 
 ```bash
-git clone https://github.com/ChenShuo2004/cs-xiaohuang-ppt.git
-cd cs-xiaohuang-ppt
+git clone https://github.com/ChenShuo2004/cs-xiaohuang-skill.git
+cd cs-xiaohuang-skill
 mkdir -p "${CODEX_HOME:-$HOME/.codex}/skills"
-cp -R ./cs-xiaohuang-ppt "${CODEX_HOME:-$HOME/.codex}/skills/"
+cp -R ./cs-xiaohuang-skill "${CODEX_HOME:-$HOME/.codex}/skills/"
 ```
 
 Windows PowerShell：
 
 ```powershell
-git clone https://github.com/ChenShuo2004/cs-xiaohuang-ppt.git
-Set-Location .\cs-xiaohuang-ppt
-Copy-Item -Recurse .\cs-xiaohuang-ppt "$env:USERPROFILE\.codex\skills\cs-xiaohuang-ppt"
+git clone https://github.com/ChenShuo2004/cs-xiaohuang-skill.git
+Set-Location .\cs-xiaohuang-skill
+Copy-Item -Recurse .\cs-xiaohuang-skill "$env:USERPROFILE\.codex\skills\cs-xiaohuang-skill"
 ```
 
 ## 怎么用
@@ -101,7 +104,7 @@ Copy-Item -Recurse .\cs-xiaohuang-ppt "$env:USERPROFILE\.codex\skills\cs-xiaohua
 ### 文章变成一套小黄课件图
 
 ```text
-Use $cs-xiaohuang-ppt 把下面文章做成 10 页小黄轻手绘 PPT-style 页面图。
+Use $cs-xiaohuang-skill 把下面文章做成 10 页小黄轻手绘 PPT-style 页面图。
 面向刚接触这个主题的中文读者；先给 slide blueprint，再逐页生成 16:9 PNG 和 contact sheet。
 小黄必须承担解释关键关系的动作，文字保持短。
 
@@ -113,7 +116,7 @@ Use $cs-xiaohuang-ppt 把下面文章做成 10 页小黄轻手绘 PPT-style 页�
 ### 文章封面与正文配图
 
 ```text
-Use $cs-xiaohuang-ppt 为下面文章生成 1 张 21:9 封面图和 4 张 16:9 正文配图。
+Use $cs-xiaohuang-skill 为下面文章生成 1 张 21:9 封面图和 4 张 16:9 正文配图。
 先识别最值得被理解的认知锚点并输出 shot list；每张图只解释一个关系。
 正文配图默认不要页码或 PPT 标题，小黄必须完成关键动作；最后输出 contact sheet。
 
@@ -123,7 +126,7 @@ Use $cs-xiaohuang-ppt 为下面文章生成 1 张 21:9 封面图和 4 张 16:9 �
 ### 产品或工作流说明
 
 ```text
-Use $cs-xiaohuang-ppt 将这个产品工作流做成 8 页小黄 PPT 图。
+Use $cs-xiaohuang-skill 将这个产品工作流做成 8 页小黄 PPT 图。
 目标是让潜在用户理解：旧方法卡在哪里、系统如何处理、最终获得什么。
 先规划叙事；不要做可编辑 PPTX，不要使用卡片墙或正式流程图。
 
@@ -133,11 +136,18 @@ Use $cs-xiaohuang-ppt 将这个产品工作流做成 8 页小黄 PPT 图。
 ### 只要规划，不生成图片
 
 ```text
-Use $cs-xiaohuang-ppt 先不要生图。
+Use $cs-xiaohuang-skill 先不要生图。
 把下面内容规划为一套 6 页左右的小黄 PPT-style deck。
 逐页给出标题、主旨、archetype、小黄动作、可见中文和图像 brief。
 
 <粘贴素材>
+```
+
+### 小黄品牌 IP 延展
+
+```text
+Use $cs-xiaohuang-skill 基于小黄身份参考图，生成一张保持暖黄种子轮廓、空心爱心天线和细黑四肢的 3D 软胶角色图。
+只转换材质、体积和光线，不重新设计角色；暖白背景，无文字或水印。
 ```
 
 更多提示词可见 [examples/prompts.md](examples/prompts.md)。
@@ -160,7 +170,7 @@ Use $cs-xiaohuang-ppt 先不要生图。
 - 复杂系统架构图、数据仪表盘、密集表格或正式流程图。
 - 长段正文、逐字讲稿、代码块、真实 UI 或复杂动效。
 
-若需要可编辑演示文稿，请使用专门的 Presentation / PowerPoint 工作流；若需要小黄品牌资产、表情、三视图或 3D 延展，请使用 [`$cs-xiaohuang-skill`](https://github.com/ChenShuo2004/cs-skills)。
+若需要可编辑演示文稿，请使用专门的 Presentation / PowerPoint 工作流。品牌 IP 延展是本 skill 的内置能力；角色 DNA 始终优先于场景、媒介和画风。
 
 ## 目录结构
 
@@ -172,7 +182,7 @@ Use $cs-xiaohuang-ppt 先不要生图。
 ├── examples/
 │   ├── images/
 │   └── prompts.md
-└── cs-xiaohuang-ppt/               # 安装此目录
+└── cs-xiaohuang-skill/             # 安装此目录
     ├── SKILL.md
     ├── agents/openai.yaml
     ├── assets/
@@ -180,6 +190,8 @@ Use $cs-xiaohuang-ppt 先不要生图。
     │   └── theme-tokens.json
     └── references/
         ├── character-dna.md
+        ├── media-and-variants.md
+        ├── ip-prompt-templates.md
         ├── article-illustrations.md
         ├── intake.md
         ├── narrative-planning.md

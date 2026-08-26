@@ -1,5 +1,5 @@
 {
-  "name": "cs-xiaohuang-ppt-v1",
+  "name": "cs-xiaohuang-skill-v2",
   "language": "zh-CN",
   "canvas": {
     "presentation_ratio": "16:9",
@@ -36,6 +36,7 @@
   "delivery": {
     "default": "PNG page images plus contact sheet and blueprint summary",
     "article": "one optional 21:9 cover plus 3-6 16:9 body illustrations, contact sheet, and shot list",
+    "brand_ip": "single identity-preserving IP assets in the requested medium, size, and delivery folder",
     "out_of_scope": "editable PPTX, image-based PPTX, PDF export, formal architecture diagrams, and dashboard-style slides",
     "text_fidelity": "reduce labels and regenerate first; use deterministic text overlay only after the visual direction is accepted"
   },
