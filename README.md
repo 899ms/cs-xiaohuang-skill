@@ -114,12 +114,12 @@ Copy-Item -Recurse .\cs-web-slides "$env:USERPROFILE\.codex\skills\cs-web-slides
 
 ~~~text
 Use $cs-web-slides 把下面课程做成 12 页知识型网页幻灯片。
-受众是刚入门的中文学习者；先给我 Warm Intelligence、Swiss Signal、Editorial Noir 三个真实封面方向，再按我选择的方向完成整套 deck。
+受众是刚入门的中文学习者；先给我 笔记手帐、杂志静奢、果冻多巴胺 三个真实封面方向，再按我选择的方向完成整套 deck。
 
 <粘贴课程素材>
 ~~~
 
-内置课程风格库：Warm Intelligence、Swiss Signal、Editorial Noir、Bio-Techno Reveal、Pixel Signal 与 Liquid Metal Ops。可先打开 `cs-web-slides/assets/course-style-gallery.html` 查看方向。
+内置课程风格库：笔记手帐、粗粝手作、果冻多巴胺、杂志静奢、像素未来、液态玻璃。可先打开 `cs-web-slides/assets/course-style-gallery.html` 查看方向。
 
 通用网页演示也可这样调用：
 

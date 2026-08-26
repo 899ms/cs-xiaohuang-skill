@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>CS 网页幻灯片 · 知识课程风格库</title>
+    <title>CS 网页幻灯片 · 网红知识课风格库</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -12,9 +12,10 @@
     />
     <style>
       :root {
-        --ink: #171716;
-        --paper: #f1eee6;
-        --line: rgba(241, 238, 230, 0.2);
+        --ink: #191918;
+        --paper: #f4f0e8;
+        --chrome: #121211;
+        --line: rgba(244, 240, 232, 0.18);
       }
 
       * {
@@ -25,7 +26,7 @@
         min-width: 320px;
         margin: 0;
         color: var(--paper);
-        background: #121210;
+        background: var(--chrome);
         font-family: "Noto Sans SC", sans-serif;
       }
 
@@ -35,47 +36,47 @@
         margin: 0 auto;
       }
 
-      .gallery-header {
-        display: flex;
-        gap: 32px;
+      .gallery-head {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(220px, 330px);
+        gap: 48px;
         align-items: end;
-        justify-content: space-between;
-        padding-bottom: 28px;
+        padding-bottom: 26px;
         border-bottom: 1px solid var(--line);
       }
 
       .eyebrow,
-      .card-meta,
-      .slide-kicker,
-      .slide-index {
+      .meta,
+      .kicker,
+      .index,
+      .status {
         margin: 0;
         font-family: "DM Mono", monospace;
-        font-size: 11px;
+        font-size: 10px;
         font-weight: 500;
         letter-spacing: 0.11em;
         text-transform: uppercase;
       }
 
       .eyebrow {
-        color: #f47749;
+        color: #ff7449;
       }
 
       h1 {
-        max-width: 760px;
+        max-width: 780px;
         margin: 12px 0 0;
         font-family: "Instrument Serif", serif;
-        font-size: clamp(46px, 6vw, 82px);
+        font-size: clamp(46px, 6.2vw, 84px);
         font-weight: 400;
-        letter-spacing: -0.055em;
-        line-height: 0.9;
+        letter-spacing: -0.06em;
+        line-height: 0.88;
       }
 
-      .gallery-header > p {
-        max-width: 330px;
+      .gallery-head > p {
         margin: 0;
-        color: #aaa69d;
+        color: #aaa69e;
         font-size: 15px;
-        line-height: 1.65;
+        line-height: 1.7;
       }
 
       .styles {
@@ -85,11 +86,7 @@
         padding-top: 34px;
       }
 
-      .style {
-        min-width: 0;
-      }
-
-      .style-top {
+      .style-title {
         display: flex;
         gap: 16px;
         align-items: baseline;
@@ -97,313 +94,346 @@
         margin: 0 0 12px;
       }
 
-      .style h2 {
+      h2 {
         margin: 0;
         font-size: 19px;
         font-weight: 600;
         letter-spacing: -0.035em;
       }
 
-      .card-meta {
-        color: #8c887f;
-        font-size: 10px;
+      .meta {
+        color: #8d8980;
+        font-size: 9px;
+        white-space: nowrap;
       }
 
-      .mini-slide {
+      .slide {
         position: relative;
         aspect-ratio: 16 / 9;
         overflow: hidden;
-        cursor: default;
-        box-shadow: 0 16px 34px rgba(0, 0, 0, 0.2);
+        box-shadow: 0 15px 36px rgba(0, 0, 0, 0.22);
         transition:
-          transform 320ms cubic-bezier(0.22, 1, 0.36, 1),
-          box-shadow 320ms cubic-bezier(0.22, 1, 0.36, 1);
+          transform 300ms cubic-bezier(0.22, 1, 0.36, 1),
+          box-shadow 300ms cubic-bezier(0.22, 1, 0.36, 1);
       }
 
-      .mini-slide:hover {
-        box-shadow: 0 26px 52px rgba(0, 0, 0, 0.32);
+      .slide:hover {
+        box-shadow: 0 26px 52px rgba(0, 0, 0, 0.34);
         transform: translateY(-6px);
       }
 
-      .slide-kicker,
-      .slide-index {
+      .kicker,
+      .index {
         position: absolute;
         z-index: 3;
       }
 
-      .slide-kicker {
+      .kicker {
         top: 7%;
         left: 7%;
       }
 
-      .slide-index {
+      .index {
         right: 7%;
         bottom: 7%;
       }
 
-      .warm {
-        color: #202019;
+      /* 01 — Notes App Chic */
+      .notes {
+        color: #1c1b18;
         background:
-          radial-gradient(circle at 77% 24%, #e7b95d 0 4%, transparent 4.3%),
-          radial-gradient(circle at 85% 61%, #99b6a4 0 13%, transparent 13.3%),
-          #f3eee2;
+          linear-gradient(90deg, transparent 11%, rgba(225, 86, 77, 0.5) 11.2% 11.6%, transparent 11.8%),
+          repeating-linear-gradient(#f6f1e5 0 22px, #d9e4ee 23px 24px);
       }
 
-      .warm::after {
+      .notes-title {
         position: absolute;
-        right: 10%;
-        bottom: -14%;
-        width: 35%;
-        height: 67%;
-        border: 2px solid #202019;
-        border-radius: 48% 50% 42% 44%;
-        content: "";
-        transform: rotate(-14deg);
-      }
-
-      .warm-title {
-        position: absolute;
-        top: 29%;
-        left: 7%;
-        width: 63%;
+        top: 27%;
+        left: 13%;
+        width: 68%;
         margin: 0;
-        font-family: "Instrument Serif", serif;
-        font-size: clamp(30px, 3.1vw, 52px);
-        font-weight: 400;
-        letter-spacing: -0.075em;
-        line-height: 0.86;
-      }
-
-      .warm-title em {
-        color: #d74d37;
-      }
-
-      .swiss {
-        color: #10100f;
-        background:
-          linear-gradient(90deg, transparent 49.8%, rgba(16, 16, 15, 0.16) 50%, transparent 50.2%),
-          linear-gradient(0deg, transparent 49.8%, rgba(16, 16, 15, 0.16) 50%, transparent 50.2%),
-          #f4f4ee;
-      }
-
-      .swiss .slide-kicker,
-      .swiss .slide-index {
-        color: #e43922;
-      }
-
-      .swiss-number {
-        position: absolute;
-        top: 19%;
-        left: 7%;
-        color: #e43922;
-        font-size: clamp(54px, 6vw, 94px);
-        font-weight: 900;
-        letter-spacing: -0.1em;
-        line-height: 0.8;
-      }
-
-      .swiss-title {
-        position: absolute;
-        bottom: 18%;
-        left: 7%;
-        width: 76%;
-        margin: 0;
-        font-size: clamp(25px, 2.6vw, 42px);
+        font-size: clamp(23px, 2.45vw, 38px);
         font-weight: 900;
         letter-spacing: -0.08em;
-        line-height: 0.92;
+        line-height: 1.02;
       }
 
-      .swiss-bar {
+      .notes-title span {
+        position: relative;
+        z-index: 0;
+      }
+
+      .notes-title span::after {
         position: absolute;
-        right: 7%;
-        bottom: 18%;
-        width: 17%;
-        height: 12px;
-        background: #135ec9;
+        right: -3%;
+        bottom: 4%;
+        left: -3%;
+        z-index: -1;
+        height: 36%;
+        background: rgba(255, 223, 70, 0.72);
+        content: "";
+        transform: rotate(-1.5deg);
       }
 
-      .editorial {
-        color: #f3eee6;
+      .notes-sticker {
+        position: absolute;
+        right: 11%;
+        top: 20%;
+        display: grid;
+        width: 18%;
+        aspect-ratio: 1;
+        color: #ffffff;
+        background: #f2664b;
+        border-radius: 50% 48% 51% 46%;
+        font-size: clamp(18px, 2vw, 30px);
+        font-weight: 900;
+        place-items: center;
+        transform: rotate(11deg);
+      }
+
+      .notes-arrow {
+        position: absolute;
+        right: 13%;
+        bottom: 26%;
+        width: 25%;
+        height: 15%;
+        border-top: 2px solid #1c1b18;
+        border-right: 2px solid #1c1b18;
+        border-radius: 0 50% 0 0;
+        transform: rotate(-8deg);
+      }
+
+      .notes-arrow::after {
+        position: absolute;
+        top: -7px;
+        right: -3px;
+        width: 11px;
+        height: 11px;
+        border-top: 2px solid #1c1b18;
+        border-right: 2px solid #1c1b18;
+        content: "";
+        transform: rotate(45deg);
+      }
+
+      /* 02 — Anti-AI Craft */
+      .craft {
+        color: #181818;
         background:
-          linear-gradient(90deg, rgba(243, 238, 230, 0.14) 1px, transparent 1px) 0 0 / 20% 100%,
-          #171716;
+          radial-gradient(circle at 79% 23%, #ffdb45 0 8%, transparent 8.2%),
+          #e8e3d7;
       }
 
-      .editorial .slide-kicker,
-      .editorial .slide-index {
-        color: #aaa69d;
+      .craft::before {
+        position: absolute;
+        inset: 8% 7%;
+        border: 3px solid #181818;
+        content: "";
+        transform: rotate(-1.8deg);
+      }
+
+      .craft-title {
+        position: absolute;
+        top: 28%;
+        left: 12%;
+        width: 65%;
+        margin: 0;
+        font-size: clamp(22px, 2.3vw, 36px);
+        font-weight: 900;
+        letter-spacing: -0.1em;
+        line-height: 1.05;
+      }
+
+      .craft-title em {
+        color: #e93c2e;
+        font-family: "Instrument Serif", serif;
+        font-size: 1.22em;
+        font-weight: 400;
+      }
+
+      .craft-scribble {
+        position: absolute;
+        right: 14%;
+        bottom: 19%;
+        width: 27%;
+        height: 9%;
+        border-top: 5px solid #275edb;
+        border-radius: 50%;
+        transform: rotate(-12deg);
+      }
+
+      .craft .kicker,
+      .craft .index {
+        color: #4d4a45;
+      }
+
+      /* 03 — Tactile Pop */
+      .pop {
+        color: #241b45;
+        background:
+          radial-gradient(circle at 75% 32%, #ff6e66 0 15%, transparent 15.3%),
+          radial-gradient(circle at 78% 35%, rgba(255, 255, 255, 0.45) 0 3%, transparent 3.5%),
+          linear-gradient(136deg, #d7cbff, #fee1c7);
+      }
+
+      .pop-title {
+        position: absolute;
+        top: 26%;
+        left: 8%;
+        width: 70%;
+        margin: 0;
+        font-size: clamp(24px, 2.6vw, 41px);
+        font-weight: 900;
+        letter-spacing: -0.095em;
+        line-height: 0.99;
+      }
+
+      .pop-pill {
+        position: absolute;
+        right: 9%;
+        bottom: 17%;
+        padding: 8px 12px;
+        color: #ffffff;
+        background: #6d4ee6;
+        border-radius: 999px;
+        box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.42), 0 8px 15px rgba(74, 44, 170, 0.26);
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+      }
+
+      .pop-star {
+        position: absolute;
+        left: 13%;
+        bottom: 20%;
+        color: #f6bd3d;
+        font-size: clamp(34px, 4vw, 62px);
+        text-shadow: 0 4px 0 rgba(255, 255, 255, 0.45);
+        transform: rotate(-12deg);
+      }
+
+      /* 04 — Quiet Editorial */
+      .editorial {
+        color: #f4f0e8;
+        background:
+          linear-gradient(90deg, rgba(244, 240, 232, 0.14) 1px, transparent 1px) 0 0 / 20% 100%,
+          #1c1b19;
       }
 
       .editorial-title {
         position: absolute;
-        top: 27%;
+        top: 25%;
         left: 9%;
-        width: 77%;
+        width: 78%;
         margin: 0;
         font-family: "Instrument Serif", serif;
-        font-size: clamp(31px, 3.4vw, 54px);
+        font-size: clamp(30px, 3.3vw, 53px);
         font-weight: 400;
-        letter-spacing: -0.07em;
+        letter-spacing: -0.075em;
         line-height: 0.89;
       }
 
       .editorial-title em {
-        color: #b7b2a8;
+        color: #c8c1b5;
       }
 
-      .editorial-caption {
+      .editorial-note {
         position: absolute;
-        bottom: 17%;
+        bottom: 15%;
         left: 9%;
-        max-width: 58%;
-        color: #aaa69d;
+        width: 60%;
+        color: #aaa49a;
         font-size: 11px;
         line-height: 1.55;
       }
 
-      .bio {
-        color: #f9f6f2;
-        background:
-          radial-gradient(circle at 76% 43%, rgba(242, 76, 55, 0.94), transparent 20%),
-          linear-gradient(110deg, #160908, #240d0b 48%, #050505);
+      .editorial .kicker,
+      .editorial .index {
+        color: #aaa49a;
       }
 
-      .bio::before {
-        position: absolute;
-        inset: 0;
-        background-image:
-          linear-gradient(rgba(255, 255, 255, 0.12) 1px, transparent 1px),
-          linear-gradient(90deg, rgba(255, 255, 255, 0.12) 1px, transparent 1px);
-        background-size: 24px 24px;
-        content: "";
-        mask-image: linear-gradient(90deg, black, transparent 75%);
-      }
-
-      .bio-orbit {
-        position: absolute;
-        top: 16%;
-        right: -8%;
-        width: 58%;
-        aspect-ratio: 1;
-        border: 1px solid rgba(255, 255, 255, 0.55);
-        border-radius: 50%;
-      }
-
-      .bio-orbit::before,
-      .bio-orbit::after {
-        position: absolute;
-        border: 1px solid rgba(255, 255, 255, 0.32);
-        border-radius: 50%;
-        content: "";
-      }
-
-      .bio-orbit::before {
-        inset: 12%;
-      }
-
-      .bio-orbit::after {
-        inset: 29%;
-      }
-
-      .bio-title {
-        position: absolute;
-        bottom: 16%;
-        left: 7%;
-        width: 68%;
-        margin: 0;
-        font-size: clamp(24px, 2.55vw, 41px);
-        font-weight: 600;
-        letter-spacing: -0.075em;
-        line-height: 0.96;
-      }
-
-      .bio .slide-kicker,
-      .bio .slide-index {
-        color: #ffb9a8;
-      }
-
+      /* 05 — Retro Pixel */
       .pixel {
         color: #ffffff;
         background:
-          linear-gradient(90deg, rgba(255, 255, 255, 0.06) 1px, transparent 1px) 0 0 / 8px 8px,
-          #050505;
+          linear-gradient(90deg, rgba(255, 255, 255, 0.06) 1px, transparent 1px) 0 0 / 9px 9px,
+          #070707;
       }
 
       .pixel-title {
         position: absolute;
-        top: 30%;
-        left: 7%;
-        width: 84%;
+        top: 29%;
+        left: 8%;
+        width: 80%;
         margin: 0;
         font-family: "DM Mono", monospace;
-        font-size: clamp(20px, 2.15vw, 34px);
+        font-size: clamp(18px, 2vw, 32px);
         font-weight: 500;
-        letter-spacing: -0.095em;
-        line-height: 1.05;
+        letter-spacing: -0.09em;
+        line-height: 1.1;
       }
 
       .pixel-title span {
-        color: #a4ff52;
+        color: #a6ff4d;
       }
 
-      .pixel-status {
+      .status {
         position: absolute;
-        right: 7%;
+        right: 8%;
         bottom: 18%;
-        padding: 6px 8px;
-        color: #050505;
-        background: #a4ff52;
-        font-family: "DM Mono", monospace;
-        font-size: 9px;
-        letter-spacing: 0.05em;
+        padding: 7px 9px;
+        color: #080808;
+        background: #a6ff4d;
       }
 
-      .pixel .slide-kicker,
-      .pixel .slide-index {
-        color: #a4ff52;
+      .pixel .kicker,
+      .pixel .index {
+        color: #a6ff4d;
       }
 
-      .metal {
+      /* 06 — Liquid Glass */
+      .glass {
         color: #ffffff;
         background:
-          linear-gradient(132deg, transparent 0 42%, rgba(255, 255, 255, 0.16) 42.15% 42.4%, transparent 42.6%),
-          radial-gradient(circle at 79% 33%, #424242, transparent 28%),
-          #090909;
+          radial-gradient(circle at 72% 23%, rgba(128, 226, 255, 0.75), transparent 27%),
+          linear-gradient(135deg, #354e83, #142138 57%, #162848);
       }
 
-      .metal-panel {
+      .glass-panel {
         position: absolute;
-        right: 7%;
-        bottom: 13%;
-        width: 28%;
-        height: 42%;
-        border: 1px solid rgba(255, 255, 255, 0.3);
-        background: linear-gradient(135deg, rgba(255, 255, 255, 0.18), rgba(0, 0, 0, 0.45) 56%, rgba(196, 215, 255, 0.16));
-        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.24);
+        right: 8%;
+        bottom: 11%;
+        width: 43%;
+        height: 72%;
+        border: 1px solid rgba(255, 255, 255, 0.42);
+        background: linear-gradient(145deg, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.07));
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5);
+        backdrop-filter: blur(14px);
+        transform: rotate(7deg);
       }
 
-      .metal-title {
+      .glass-title {
         position: absolute;
-        top: 31%;
-        left: 7%;
-        width: 66%;
+        top: 30%;
+        left: 8%;
+        z-index: 2;
+        width: 64%;
         margin: 0;
         font-size: clamp(23px, 2.45vw, 39px);
-        font-weight: 500;
-        letter-spacing: -0.075em;
-        line-height: 0.98;
+        font-weight: 700;
+        letter-spacing: -0.085em;
+        line-height: 1;
       }
 
-      .metal-title em {
-        color: #bdc7d8;
+      .glass-title em {
+        color: #c7f1ff;
         font-family: "Instrument Serif", serif;
-        font-size: 1.13em;
+        font-size: 1.18em;
+        font-weight: 400;
       }
 
-      .metal .slide-kicker,
-      .metal .slide-index {
-        color: #b8bcc3;
+      .glass .kicker,
+      .glass .index {
+        color: #d3f2ff;
       }
 
       @media (max-width: 920px) {
@@ -412,12 +442,9 @@
           padding-top: 36px;
         }
 
-        .gallery-header {
-          display: block;
-        }
-
-        .gallery-header > p {
-          margin-top: 18px;
+        .gallery-head {
+          grid-template-columns: 1fr;
+          gap: 18px;
         }
 
         .styles {
@@ -439,49 +466,49 @@
   </head>
   <body>
     <main class="gallery">
-      <header class="gallery-header">
+      <header class="gallery-head">
         <div>
-          <p class="eyebrow">CS Web Slides / Knowledge courses</p>
-          <h1>六种课程视觉语言，<br />不是六种换色模板。</h1>
+          <p class="eyebrow">CS Web Slides / Viral knowledge styles</p>
+          <h1>六种网红风格，<br />都能讲好一堂课。</h1>
         </div>
-        <p>每个方向都要能讲完“概念、关系、步骤、练习与结论”，再谈封面是否足够酷。</p>
+        <p>趋势只能决定第一眼是否停留；结构、阅读和真实内容，才决定一份课程是否会被收藏。</p>
       </header>
 
-      <section class="styles" aria-label="知识课程风格库">
-        <article class="style">
-          <div class="style-top"><h2>Warm Intelligence</h2><p class="card-meta">入门 / 方法论</p></div>
-          <div class="mini-slide warm">
-            <p class="slide-kicker">第一课 / 01</p><p class="warm-title">把复杂问题，讲成<em>看得见</em>的关系。</p><p class="slide-index">WARM</p>
+      <section class="styles" aria-label="网红知识课程风格">
+        <article>
+          <div class="style-title"><h2>笔记手帐</h2><p class="meta">收藏感 / 入门课</p></div>
+          <div class="slide notes">
+            <p class="kicker">课前笔记 / 01</p><p class="notes-title">把复杂知识，变成<span>一页看懂</span>的关系。</p><span class="notes-sticker">✓</span><span class="notes-arrow"></span><p class="index">NOTES</p>
           </div>
         </article>
-        <article class="style">
-          <div class="style-top"><h2>Swiss Signal</h2><p class="card-meta">框架 / 案例</p></div>
-          <div class="mini-slide swiss">
-            <p class="slide-kicker">课程结构 / 02</p><p class="swiss-number">01</p><p class="swiss-title">先建立框架，再进入细节。</p><span class="swiss-bar"></span><p class="slide-index">GRID</p>
+        <article>
+          <div class="style-title"><h2>粗粝手作</h2><p class="meta">活人感 / 复盘课</p></div>
+          <div class="slide craft">
+            <p class="kicker">真实观察</p><p class="craft-title">别急着找答案，<br />先把<em>误区</em>圈出来。</p><span class="craft-scribble"></span><p class="index">MADE</p>
           </div>
         </article>
-        <article class="style">
-          <div class="style-top"><h2>Editorial Noir</h2><p class="card-meta">观点 / 叙事</p></div>
-          <div class="mini-slide editorial">
-            <p class="slide-kicker">一个转折</p><p class="editorial-title">真正的问题，不是更努力，<br />而是<em>换一个判断</em>。</p><p class="editorial-caption">观点、证据、反思，再带走一句新的结论。</p><p class="slide-index">ESSAY</p>
+        <article>
+          <div class="style-title"><h2>果冻多巴胺</h2><p class="meta">轻快 / 效率课</p></div>
+          <div class="slide pop">
+            <p class="kicker">Small win</p><p class="pop-title">学会一个动作，<br />就获得一次反馈。</p><span class="pop-star">✦</span><span class="pop-pill">STEP 01 COMPLETE</span><p class="index">POP</p>
           </div>
         </article>
-        <article class="style">
-          <div class="style-top"><h2>Bio-Techno Reveal</h2><p class="card-meta">AI / 趋势</p></div>
-          <div class="mini-slide bio">
-            <p class="slide-kicker">观察未知</p><span class="bio-orbit"></span><p class="bio-title">从一个信号，看到技术变化的全貌。</p><p class="slide-index">SCAN</p>
+        <article>
+          <div class="style-title"><h2>杂志静奢</h2><p class="meta">观点 / 案例课</p></div>
+          <div class="slide editorial">
+            <p class="kicker">一个转折</p><p class="editorial-title">真正的增长，<br />来自<em>换一个判断</em>。</p><p class="editorial-note">先建立观点，再给证据，最后让学习者看见自己的下一步。</p><p class="index">ESSAY</p>
           </div>
         </article>
-        <article class="style">
-          <div class="style-top"><h2>Pixel Signal</h2><p class="card-meta">工具 / 开发者</p></div>
-          <div class="mini-slide pixel">
-            <p class="slide-kicker">System ready</p><p class="pixel-title">让工作流<br /><span>自己开始思考</span>。</p><p class="pixel-status">STATUS / ACTIVE</p><p class="slide-index">PXL</p>
+        <article>
+          <div class="style-title"><h2>像素未来</h2><p class="meta">AI / 工具课</p></div>
+          <div class="slide pixel">
+            <p class="kicker">System ready</p><p class="pixel-title">让你的工作流<br /><span>开始自己思考</span>。</p><p class="status">STATUS / ACTIVE</p><p class="index">PXL</p>
           </div>
         </article>
-        <article class="style">
-          <div class="style-top"><h2>Liquid Metal Ops</h2><p class="card-meta">企业 / 管理</p></div>
-          <div class="mini-slide metal">
-            <p class="slide-kicker">Operate with intent</p><p class="metal-title">把战略，变成<br /><em>可执行</em>的系统。</p><span class="metal-panel"></span><p class="slide-index">OPS</p>
+        <article>
+          <div class="style-title"><h2>液态玻璃</h2><p class="meta">产品 / 商业课</p></div>
+          <div class="slide glass">
+            <p class="kicker">Build with clarity</p><p class="glass-title">把一个想法，<br />变成<em>可执行</em>的系统。</p><span class="glass-panel"></span><p class="index">GLASS</p>
           </div>
         </article>
       </section>

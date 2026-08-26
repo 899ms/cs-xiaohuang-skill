@@ -24,7 +24,7 @@ metadata:
 按任务读取最少的参考资料：
 
 - 新建、补强或改版网页 deck：读取 [references/design-discovery.md](references/design-discovery.md) 和 [references/implementation.md](references/implementation.md)，并以 [assets/web-slide-starter.html](assets/web-slide-starter.html) 为功能底座。
-- 知识课程、方法论或教学型 deck：先读取 [references/style-index.md](references/style-index.md)，再只读取入选的风格说明。默认预览池为 Warm Intelligence、Swiss Signal、Editorial Noir。
+- 知识课程、方法论或教学型 deck：先读取 [references/style-index.md](references/style-index.md)，再只读取入选的风格说明。默认预览池为 笔记手帐、杂志静奢、果冻多巴胺。
 - 转换 PPTX：先运行 [scripts/extract-pptx.ps1](scripts/extract-pptx.ps1)，再读取 [references/pptx-conversion.md](references/pptx-conversion.md)。
 - 最终检查与交付：读取 [references/quality-checklist.md](references/quality-checklist.md)。
 
