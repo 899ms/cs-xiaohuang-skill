@@ -9,6 +9,22 @@
 > | `cs-xiaohuang-skill` | 小黄品牌 IP、轻手绘 PPT-style 图与文章配图 | PNG 图片、blueprint、contact sheet |
 > | `cs-web-slides` | 高品质网页幻灯片与 PPTX 网页化 | HTML 演示目录、原始图片资产 |
 
+## 交互式 PPT Demo
+
+> 想快速理解这个 Skill 是怎样从「一次性 Prompt」演化为可复用工作流的？打开这套 14 页交互式教程。
+
+<p align="center">
+  <img src="xiaohuang-skill-tutorial/assets/readme-preview.png" alt="cs-xiaohuang-skill 交互式 PPT 教程预览" width="100%" />
+</p>
+
+<p align="center">
+  <a href="xiaohuang-skill-tutorial/"><strong>查看 Demo 文件</strong></a>
+  &nbsp;·&nbsp;
+  <a href="xiaohuang-skill-tutorial/index.html"><strong>查看 HTML 源文件</strong></a>
+</p>
+
+克隆仓库后，直接用浏览器打开 `xiaohuang-skill-tutorial/index.html` 即可体验完整互动版本：支持方向键、空格、滚轮、触控滑动翻页；按 <kbd>E</kbd> 可直接修改文案，点击下载按钮即可保存编辑后的 HTML。
+
 ## 这是什么
 
 `cs-xiaohuang-skill` 是小黄（有温度）的统一 Codex Skill。它既能生成、编辑和延展小黄品牌 IP，也会先理解内容：做演示时建立叙事和逐页 blueprint；做文章时识别认知锚点并输出 shot list。之后将资产、页面或配图逐张生成可直接交付的图片。
