@@ -18,6 +18,7 @@ metadata:
 - 文章或活动封面为 21:9，推荐 2520×1080；文章模式默认交付 1 张封面和 3–6 张正文图。
 - 品牌 IP 延展可以交付标准图、动作 / 表情、三视图、2D / 3D、线稿、联名、场景插画或身份修复；根据用户指定尺寸和媒介生成，不强制使用 PPT 画布。
 - 本 skill 中的“PPT / 幻灯片 / deck”均指最终视觉页面图，不是可编辑 PPTX、图片型 PPTX 或 PDF。
+- 需要可交互 HTML、浏览器翻页、现场演示或把 PPTX 网页化时，转用 `cs-web-slides`；本 skill 不产出网页幻灯片。
 - 不使用 HTML、SVG、canvas、脚本绘图或 `python-pptx` 作为主要视觉生成手段。用图像生成模型逐页生成；仅可在方向已确认后，对错误中文做确定性文字叠加。
 - 复杂架构图、数据仪表盘、正式流程图、密集表格不适合本 skill；应转用可编辑演示文稿或图表工作流。
 
@@ -42,7 +43,7 @@ metadata:
 
 1. **读懂素材。** 读取文章、Markdown、PDF、DOCX、既有 PPTX、课程大纲、讲稿或粗略想法。既有 PPTX 只提取内容与视觉意图，不在本 skill 内编辑或包装它。
 2. **做 intake。** 判断主题、受众、场景、交付长度、核心论点、可视化关系与证据充分度。只有缺少会改变结构的关键信息时，才问 1–3 个简短问题。
-3. **选择输出模式。** 用户要标准图、动作、3D、联名或修复时选择 **brand IP**，并读取 `references/media-and-variants.md` 和 `references/ip-prompt-templates.md`；用户要演讲、课件或演示稿时选择 **deck**；用户要文章、公众号、博客或 Newsletter 配图时选择 **article illustration**。文章模式先给 shot list；deck 模式先定叙事。内容模式中每页 / 每张图只能有一个主观点。
+3. **选择输出模式。** 用户要标准图、动作、3D、联名或修复时选择 **brand IP**，并读取 `references/media-and-variants.md` 和 `references/ip-prompt-templates.md`；用户要静态图片课件、演讲页或演示图时选择 **deck**；用户要文章、公众号、博客或 Newsletter 配图时选择 **article illustration**。用户要可交互网页幻灯片、浏览器翻页或把 PPTX 网页化时，转用 `cs-web-slides`，不要在本 skill 内做成 PNG deck。文章模式先给 shot list；deck 模式先定叙事。内容模式中每页 / 每张图只能有一个主观点。
 4. **语义映射版式。** 读取 `references/slide-archetypes.md`。用“对比、转化、筛选、阻塞、分叉、循环、搭建、总结”等页面角色建立节奏，不能机械重复一个模板。
 5. **锁定整套风格。** 读取 `references/character-dna.md`、`references/visual-dna.md`，先写一次 style lock，再逐张复用。固定画布、暖白底、线条、调色、留白和小黄身份；deck 额外固定标题与页码，文章正文图默认不放这两个元素。
 6. **先出 blueprint 或 shot list。** 用户要求规划、素材不足，或 deck 超过 5 页时，先给 slide-by-slide blueprint。文章配图无论是否生成，都先给 shot list：插入位置、核心意思、构图类型、小黄动作、物件和短标注。

@@ -713,16 +713,16 @@
       /* === SLIDE 05 MODES === */
       .mode-grid {
         display: grid;
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: repeat(2, 1fr);
         gap: 1px;
-        margin-top: 28px;
+        margin-top: 16px;
         background: var(--line);
         border: 1.5px solid var(--line);
       }
 
       .mode {
-        min-height: 328px;
-        padding: 28px 30px;
+        min-height: 232px;
+        padding: 20px 26px 16px;
         background: var(--paper);
       }
 
@@ -740,20 +740,28 @@
       }
 
       .mode h3 {
-        margin: 36px 0 10px;
-        font-size: 34px;
+        margin: 14px 0 4px;
+        font-size: 30px;
         letter-spacing: -0.05em;
       }
 
-      .mode > p {
-        max-width: 420px;
+      .mode-skill {
+        margin: 0 0 10px;
+        color: var(--ink-soft);
+        font-family: var(--mono);
+        font-size: 13px;
+        letter-spacing: 0.02em;
+      }
+
+      .mode > p:not(.mode-skill):not(.mode-footer) {
+        max-width: 680px;
         margin: 0;
         color: var(--ink-soft);
         font-size: 18px;
-        line-height: 1.55;
+        line-height: 1.5;
       }
 
-      .mode-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 22px; }
+      .mode-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
       .mode-tags span {
         padding: 7px 10px;
         border: 1px solid var(--line);
@@ -765,12 +773,23 @@
         display: flex;
         gap: 8px;
         align-items: center;
-        margin-top: 28px;
+        margin-top: 18px;
         color: var(--orange);
         font-family: var(--mono);
         font-size: 13px;
         font-weight: 700;
       }
+
+      .mode-foundation {
+        margin: 14px 0 0;
+        padding: 12px 20px;
+        border: 1.5px dashed var(--line);
+        color: var(--ink-soft);
+        font-size: 17px;
+        line-height: 1.45;
+      }
+
+      .mode-foundation strong { color: var(--ink); font-weight: 700; }
 
       .mode-footer::before {
         width: 8px;
@@ -1925,20 +1944,17 @@
         </section>
 
         <!-- 05 MODES -->
-        <section class="slide" data-title="三种输出模式">
-          <p class="kicker reveal">03 / Three modes</p>
-          <h2 class="display reveal" data-editable style="--delay: 80ms">cs-xiaohuang-skill 到底是什么？</h2>
-          <p class="lede reveal" data-editable style="--delay: 140ms">它不是 PPT 模板，也不只是一个角色提示词。仓库把稳定的视觉生产需求分成三个可以独立调用的输出模式。</p>
+        <section class="slide" data-title="四种核心能力">
+          <p class="kicker reveal">03 / Four capabilities</p>
+          <h2 class="display reveal" data-editable style="--delay: 80ms">先看你要解决什么，再选能力。</h2>
+          <p class="lede reveal" data-editable style="--delay: 140ms">第三种才是真正的幻灯片：在浏览器里一页一页讲，而不是生成一套 PNG 图片。</p>
           <div class="mode-grid reveal" style="--delay: 180ms">
-            <article class="mode hover-lift"><span class="mode-number">01</span><h3 data-editable>Brand IP</h3><p data-editable>生成、延展与修复小黄的标准角色资产，同时锁住身份锚点。</p><div class="mode-tags"><span>标准图</span><span>动作表情</span><span>三视图</span><span>2D / 3D</span></div><p class="mode-footer">IDENTITY FIRST</p></article>
-            <article class="mode hover-lift"><span class="mode-number">02</span><h3 data-editable>Deck</h3><p data-editable>把文章、课程、演讲或想法，转成有叙事、有动作、有语义结构的 PNG 页面图。</p><div class="mode-tags"><span>课程</span><span>分享</span><span>产品说明</span><span>工作流</span></div><p class="mode-footer">NARRATIVE FIRST</p></article>
-            <article class="mode hover-lift"><span class="mode-number">03</span><h3 data-editable>Article Illustration</h3><p data-editable>为文章选出真正值得解释的认知锚点，生成封面与正文配图，而不是机械配图。</p><div class="mode-tags"><span>21:9 封面</span><span>16:9 正文图</span><span>shot list</span></div><p class="mode-footer">ANCHOR FIRST</p></article>
+            <article class="mode hover-lift"><span class="mode-number">01</span><h3 data-editable>小黄 PPT</h3><p class="mode-skill">cs-xiaohuang-skill</p><p data-editable>把课程、分享或产品说明，画成有叙事、有动作的 PNG 页面图。</p><div class="mode-tags"><span>16:9 PNG</span><span>blueprint</span><span>contact sheet</span></div><p class="mode-footer">PNG PAGES</p></article>
+            <article class="mode hover-lift"><span class="mode-number">02</span><h3 data-editable>文章配图</h3><p class="mode-skill">cs-xiaohuang-skill</p><p data-editable>为文章选出真正值得解释的认知锚点，生成封面与正文配图。</p><div class="mode-tags"><span>21:9 封面</span><span>16:9 正文图</span><span>shot list</span></div><p class="mode-footer">ANCHOR FIRST</p></article>
+            <article class="mode hover-lift"><span class="mode-number">03</span><h3 data-editable>网页幻灯片</h3><p class="mode-skill">cs-web-slides</p><p data-editable>把课程、路演或已有 PPTX，做成可翻页、可分享的网页演示。</p><div class="mode-tags"><span>键盘 / 触控</span><span>PPTX 网页化</span><span>浏览器改字</span></div><p class="mode-footer">LIVE HTML DECK</p></article>
+            <article class="mode hover-lift"><span class="mode-number">04</span><h3 data-editable>产品视频</h3><p class="mode-skill">cs-shotcraft-skill</p><p data-editable>把真实产品页面做成有镜头、节奏和声音的发布短片。</p><div class="mode-tags"><span>分镜</span><span>Remotion</span><span>带 / 不带 BGM</span></div><p class="mode-footer">MOTION FIRST</p></article>
           </div>
-          <div class="example-gallery reveal" style="--delay: 260ms" aria-label="仓库 examples/images 中的小黄示例页面">
-            <figure><img src="assets/01-cognitive-anchor.png" alt="小黄示例：一个核心动作" /><figcaption>一个核心动作</figcaption></figure>
-            <figure><img src="assets/03-relation-reveal.png" alt="小黄示例：把关系画出来" /><figcaption>把关系画出来</figcaption></figure>
-            <figure><img src="assets/05-metaphor-translation.png" alt="小黄示例：抽象概念变得可见" /><figcaption>抽象变成看得见</figcaption></figure>
-          </div>
+          <p class="mode-foundation reveal" data-editable style="--delay: 260ms">小黄 IP 是静态视觉的共同基础，不是第三条路径。<strong>小黄 PPT 是图；网页幻灯片才是现场用的 deck。</strong></p>
         </section>
 
         <!-- 06 ARCHITECTURE -->
@@ -1950,7 +1966,7 @@
             <div class="system-core" aria-label="SKILL.md 是系统调度器"><span>SKILL.md<small>ROUTER</small></span></div>
             <button class="arch-node" type="button" data-node="assets" data-title="assets/" data-copy="保存唯一的小黄身份参考图与 theme-tokens.json。它们不是装饰素材，而是角色和色彩的固定锚点。">assets/</button>
             <button class="arch-node" type="button" data-node="references" data-title="references/" data-copy="按任务读取的知识模块：intake、叙事、页面 archetype、角色 DNA、视觉 DNA、提示词和 QA。">references/</button>
-            <button class="arch-node" type="button" data-node="examples" data-title="examples/" data-copy="用可复制的调用方式，帮助使用者说清楚自己想生成 Deck、文章配图，还是品牌 IP。">examples/</button>
+            <button class="arch-node" type="button" data-node="examples" data-title="examples/" data-copy="用可复制的调用方式，帮助使用者说清楚自己想生成小黄 PPT、文章配图、网页幻灯片，还是品牌 IP 资产。">examples/</button>
             <button class="arch-node" type="button" data-node="tokens" data-title="theme-tokens.json" data-copy="把画布比例、颜色、母版、文字预算与交付边界压缩成机器稳定读取的 style lock。">theme tokens</button>
             <button class="arch-node" type="button" data-node="image" data-title="reference-xiaohuang.png" data-copy="唯一身份锚点。任何图像生成和验收都先看它，再谈场景、动作或媒介。">reference image</button>
             <button class="arch-node" type="button" data-node="quality" data-title="output-quality.md" data-copy="生成不是结束：检查角色身份、文字、比例、构图、整套节奏，并以 contact sheet 统一验收。">output quality</button>
@@ -1967,7 +1983,7 @@
             <article class="router-card reveal hover-lift" style="--delay: 140ms">
               <span class="file-icon" aria-hidden="true"></span>
               <h3 data-editable>SKILL.md</h3>
-              <p data-editable>判断用户意图，选择 Brand IP / Deck / Article Illustration，决定要读取哪些 references，并定义流程和交付边界。</p>
+              <p data-editable>判断用户意图：静态 PNG 走 Deck / Article；需要角色资产时走 Brand IP；要可翻页的网页幻灯片时转给 cs-web-slides。</p>
               <p class="router-rule" data-editable>它是 Router，不是知识库。</p>
             </article>
             <div class="reveal" style="--delay: 220ms">
